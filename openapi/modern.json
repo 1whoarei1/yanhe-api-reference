@@ -1,0 +1,914 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "延河课堂接口参考 - 新版延河课堂",
+    "version": "0.1.0",
+    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://aita.yanhekt.cn"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/userapi/v1/infosimple": {
+      "get": {
+        "operationId": "modern_profile",
+        "summary": "无业务参数",
+        "description": "code=200；params.id / tenant_id / phone / account\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "code=200；params.id / tenant_id / phone / account",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/watch/api.js",
+          "anchor": "/userapi/v1/infosimple",
+          "level": "source"
+        },
+        "x-response-fields": "code=200；params.id / tenant_id / phone / account",
+        "x-upstream-method": "Yanhekt.authenticate"
+      }
+    },
+    "/vlabpassportapi/v1/account-profile/course": {
+      "get": {
+        "operationId": "modern_enrolled",
+        "summary": "force_mycourse=1, nowpage, per-page=100",
+        "description": "code=1000；params.result.data / total\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "force_mycourse",
+            "in": "query",
+            "required": false,
+            "description": "参考客户端请求本人课程",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "nowpage",
+            "in": "query",
+            "required": false,
+            "description": "该接口使用 nowpage",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "per-page",
+            "in": "query",
+            "required": false,
+            "description": "参数名含连字符",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "code=1000；params.result.data / total",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 1000,
+                      "params": {
+                        "result": {
+                          "data": [
+                            {
+                              "Id": 10001,
+                              "Title": "示例课程",
+                              "Teacher": "示例教师",
+                              "TermName": "2026-2027-1"
+                            }
+                          ],
+                          "total": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/vlabpassportapi/v1/account-profile/course",
+          "level": "source"
+        },
+        "x-response-fields": "code=1000；params.result.data / total",
+        "x-upstream-method": "Yanhekt.courses"
+      }
+    },
+    "/vlabpassportapi/v1/course/term-list": {
+      "get": {
+        "operationId": "modern_terms",
+        "summary": "无业务参数",
+        "description": "params.list[]：id / term_name；适配器允许 code=1000/0/200\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "params.list[]：id / term_name；适配器允许 code=1000/0/200",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 1000,
+                      "params": {
+                        "list": [
+                          {
+                            "id": 1,
+                            "term_name": "2026-2027-1"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/vlabpassportapi/v1/course/term-list",
+          "level": "source"
+        },
+        "x-response-fields": "params.list[]：id / term_name；适配器允许 code=1000/0/200",
+        "x-upstream-method": "Yanhekt.search"
+      }
+    },
+    "/vlabpassportapi/v1/user/structures": {
+      "get": {
+        "operationId": "modern_colleges",
+        "summary": "无业务参数",
+        "description": "params.data：院系树，id / display_name；code=1000/0/200\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "params.data：院系树，id / display_name；code=1000/0/200",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 1000,
+                      "params": {
+                        "data": [
+                          {
+                            "id": 1,
+                            "display_name": "示例学院"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/vlabpassportapi/v1/user/structures",
+          "level": "source"
+        },
+        "x-response-fields": "params.data：院系树，id / display_name；code=1000/0/200",
+        "x-upstream-method": "Yanhekt.search"
+      }
+    },
+    "/courseapi/v3/multi-search/get-course-list": {
+      "get": {
+        "operationId": "modern_search",
+        "summary": "tenant, title, order, page, per_page=40；可选 term / struc_ids[]；tenant-id 请求头",
+        "description": "data.list / total；list 行含 id / title / realname / term_name / kkxy_name\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "query",
+            "required": true,
+            "description": "当前用户 tenant_id；21 是北理工观察值",
+            "schema": {
+              "type": "string"
+            },
+            "example": "21"
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "required": false,
+            "description": "课程或教师关键词，空值表示未按关键词收窄",
+            "schema": {
+              "type": "string"
+            },
+            "example": "示例课程"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "description": "已见排序包括 c.created_at desc / asc 与 c.click_record_num desc",
+            "schema": {
+              "type": "string"
+            },
+            "example": "c.created_at desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "页码，示例从 1 开始",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "请求页大小，非已验证的平台最大值",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 40
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "required": false,
+            "description": "学期列表中查得的编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "struc_ids[]",
+            "in": "query",
+            "required": false,
+            "description": "院系树中查得的编号；参考客户端一次传一个",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant-id",
+            "in": "header",
+            "required": true,
+            "description": "当前租户",
+            "schema": {
+              "type": "string"
+            },
+            "example": "21"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data.list / total；list 行含 id / title / realname / term_name / kkxy_name",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "data": {
+                        "list": [
+                          {
+                            "id": 10001,
+                            "title": "示例课程",
+                            "realname": "示例教师",
+                            "term_name": "2026-2027-1",
+                            "kkxy_name": "示例学院"
+                          }
+                        ],
+                        "total": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/courseapi/v3/multi-search/get-course-list",
+          "level": "source"
+        },
+        "x-response-fields": "data.list / total；list 行含 id / title / realname / term_name / kkxy_name",
+        "x-upstream-method": "Yanhekt.search"
+      }
+    },
+    "/courseapi/v3/multi-search/get-course-detail": {
+      "get": {
+        "operationId": "modern_course",
+        "summary": "course_id",
+        "description": "data.title / realname / term_name / sub_list / zhiyuan_id\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "required": true,
+            "description": "当前系统的课程编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "10001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data.title / realname / term_name / sub_list / zhiyuan_id",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "data": {
+                        "id": 10001,
+                        "title": "示例课程",
+                        "realname": "示例教师",
+                        "term_name": "2026-2027-1",
+                        "zhiyuan_id": "30001",
+                        "sub_list": {
+                          "group": [
+                            {
+                              "id": 200001,
+                              "sub_title": "示例课次",
+                              "playback_status": "1",
+                              "class_begin": 1790000000
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/watch/api.js",
+          "anchor": "/courseapi/v3/multi-search/get-course-detail",
+          "level": "source"
+        },
+        "x-response-fields": "data.title / realname / term_name / sub_list / zhiyuan_id",
+        "x-upstream-method": "Yanhekt.course"
+      }
+    },
+    "/courseapi/v2/course-live/get-my-course-day": {
+      "get": {
+        "operationId": "modern_today",
+        "summary": "day：YYYY-MM-DD",
+        "description": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "day",
+            "in": "query",
+            "required": true,
+            "description": "学校时区下的 YYYY-MM-DD",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-10-27"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/courseapi/v2/course-live/get-my-course-day",
+          "level": "source"
+        },
+        "x-response-fields": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status"
+      }
+    },
+    "/courseapi/v3/multi-search/get-course-teacher-others": {
+      "get": {
+        "operationId": "modern_teacher_courses",
+        "summary": "course_id, per_page=20",
+        "description": "data[]：课程行；适配器排除测试条目\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "required": true,
+            "description": "当前系统的课程编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "10001"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "请求页大小，非已验证的平台最大值",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 20
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data[]：课程行；适配器排除测试条目",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/courseapi/v3/multi-search/get-course-teacher-others",
+          "level": "source"
+        },
+        "x-response-fields": "data[]：课程行；适配器排除测试条目"
+      }
+    },
+    "/courseapi/v3/portal-home-setting/get-sub-info": {
+      "get": {
+        "operationId": "modern_lecture",
+        "summary": "course_id, sub_id",
+        "description": "data.duration / video_list；直播为 sub_type / sub_status / live_url\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "required": true,
+            "description": "当前系统的课程编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "10001"
+          },
+          {
+            "name": "sub_id",
+            "in": "query",
+            "required": true,
+            "description": "本课程中实际返回的课次编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "200001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "data": {
+                        "duration": 8100,
+                        "video_list": {
+                          "example_screen": {
+                            "type": 2,
+                            "status": 2,
+                            "preview_url": "https://aita.yanhekt.cn/play/example/screen.mp4"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/watch/api.js",
+          "anchor": "/courseapi/v3/portal-home-setting/get-sub-info",
+          "level": "source"
+        },
+        "x-response-fields": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+        "x-upstream-method": "Yanhekt.lecture"
+      }
+    },
+    "/coursesourceapi/course/study-auth/{courseId}/{subId}": {
+      "get": {
+        "operationId": "modern_page_permission",
+        "summary": "路径课程、课次编号；Tenant-Id 与当前 profile.account 对应的 username 请求头",
+        "description": "code=200；data.hasPermission：页面许可诊断值\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Tenant-Id",
+            "in": "header",
+            "required": true,
+            "description": "当前租户",
+            "schema": {
+              "type": "string"
+            },
+            "example": "21"
+          },
+          {
+            "name": "username",
+            "in": "header",
+            "required": true,
+            "description": "当前 profile.account，不是任意其它账号",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "code=200；data.hasPermission：页面许可诊断值",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 200,
+                      "data": {
+                        "hasPermission": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/watch/api.js",
+          "anchor": "/coursesourceapi/course/study-auth/${courseId}/${subId}",
+          "level": "source"
+        },
+        "x-response-fields": "code=200；data.hasPermission：页面许可诊断值"
+      }
+    },
+    "/courseapi/v3/web-socket/search-trans-result": {
+      "get": {
+        "operationId": "modern_subtitles",
+        "summary": "sub_id, format=json",
+        "description": "list[].all_content[]：BeginSec / EndSec / Text；时间单位秒\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "sub_id",
+            "in": "query",
+            "required": true,
+            "description": "课次编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "200001"
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "本文描述 JSON 格式",
+            "schema": {
+              "type": "string"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list[].all_content[]：BeginSec / EndSec / Text；时间单位秒",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "list": [
+                        {
+                          "all_content": [
+                            {
+                              "BeginSec": 68,
+                              "EndSec": 72,
+                              "Text": "示例字幕。"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/watch/api.js",
+          "anchor": "/courseapi/v3/web-socket/search-trans-result",
+          "level": "source"
+        },
+        "x-response-fields": "list[].all_content[]：BeginSec / EndSec / Text；时间单位秒",
+        "x-upstream-method": "Yanhekt.fast_transcript"
+      }
+    },
+    "/courseapi/v3/course-share-resource/get-course-resource": {
+      "get": {
+        "operationId": "modern_materials",
+        "summary": "course_id, page, per_page=100",
+        "description": "data[]：id / resource_id / old_resource_id / resource_name / resource_suffix / resource_size\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "required": true,
+            "description": "当前系统的课程编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "10001"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "页码，示例从 1 开始",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "请求页大小，非已验证的平台最大值",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data[]：id / resource_id / old_resource_id / resource_name / resource_suffix / resource_size",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/courseapi/v3/course-share-resource/get-course-resource",
+          "level": "source"
+        },
+        "x-response-fields": "data[]：id / resource_id / old_resource_id / resource_name / resource_suffix / resource_size"
+      }
+    },
+    "/spidermaterial/spider-material/web/download/dlUrl": {
+      "get": {
+        "operationId": "modern_material_download",
+        "summary": "ids：平台资料的 resource_id 或 old_resource_id",
+        "description": "state=200；data：下载地址字符串\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "modern"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "required": true,
+            "description": "resource_id 或 old_resource_id；不是资料行 id",
+            "schema": {
+              "type": "string"
+            },
+            "example": "80001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "state=200；data：下载地址字符串",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "state": 200,
+                      "data": "https://aita.yanhekt.cn/example/handout.pdf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/platform-api.js",
+          "anchor": "/spidermaterial/spider-material/web/download/dlUrl",
+          "level": "source"
+        },
+        "x-response-fields": "state=200；data：下载地址字符串"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "合法新版会话对应的 Bearer；参考客户端还保存该会话 Cookie"
+      }
+    }
+  },
+  "x-checked-at": "2026-10-27",
+  "x-sources": {
+    "refine": {
+      "repository": "https://github.com/1whoarei1/yanhe-refine",
+      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+      "implementationVersion": "0.9.3"
+    },
+    "yanhekit": {
+      "repository": "https://github.com/windlandneko/yanhekit",
+      "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
+      "license": "AGPL-3.0",
+      "client": "skills/yanhekit/scripts/client.py"
+    }
+  }
+}

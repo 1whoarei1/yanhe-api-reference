@@ -1,0 +1,1889 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-27",
+  "systems": {
+    "modern": {
+      "name": "新版延河课堂",
+      "origin": "https://aita.yanhekt.cn",
+      "auth": "合法新版会话对应的 Bearer；参考客户端还保存该会话 Cookie"
+    },
+    "legacy": {
+      "name": "旧版延河课堂",
+      "origin": "https://cbiz.yanhekt.cn",
+      "auth": "旧站独立 Bearer 与 Xclient 请求头"
+    },
+    "lms": {
+      "name": "新乐学",
+      "origin": "https://zy-eclass.bit.edu.cn",
+      "auth": "已登录会话；写请求在存在 XSRF-TOKEN 时携带 X-XSRF-TOKEN"
+    },
+    "lexue": {
+      "name": "旧乐学 Moodle",
+      "origin": "https://lexue.bit.edu.cn",
+      "auth": "浏览器会话 Cookie；AJAX 另带当前 sesskey"
+    }
+  },
+  "endpoints": [
+    {
+      "id": "modern.profile",
+      "system": "modern",
+      "method": "GET",
+      "path": "/userapi/v1/infosimple",
+      "effect": "read",
+      "request": "无业务参数",
+      "response": "code=200；params.id / tenant_id / phone / account",
+      "source": "src/watch/api.js",
+      "anchor": "/userapi/v1/infosimple",
+      "upstream": "Yanhekt.authenticate",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.enrolled",
+      "system": "modern",
+      "method": "GET",
+      "path": "/vlabpassportapi/v1/account-profile/course",
+      "effect": "read",
+      "request": "force_mycourse=1, nowpage, per-page=100",
+      "response": "code=1000；params.result.data / total",
+      "source": "src/platform-api.js",
+      "anchor": "/vlabpassportapi/v1/account-profile/course",
+      "upstream": "Yanhekt.courses",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "force_mycourse",
+          "in": "query",
+          "required": false,
+          "description": "参考客户端请求本人课程",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "nowpage",
+          "in": "query",
+          "required": false,
+          "description": "该接口使用 nowpage",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "per-page",
+          "in": "query",
+          "required": false,
+          "description": "参数名含连字符",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 100
+        }
+      ],
+      "responseExample": {
+        "code": 1000,
+        "params": {
+          "result": {
+            "data": [
+              {
+                "Id": 10001,
+                "Title": "示例课程",
+                "Teacher": "示例教师",
+                "TermName": "2026-2027-1"
+              }
+            ],
+            "total": 1
+          }
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.terms",
+      "system": "modern",
+      "method": "GET",
+      "path": "/vlabpassportapi/v1/course/term-list",
+      "effect": "read",
+      "request": "无业务参数",
+      "response": "params.list[]：id / term_name；适配器允许 code=1000/0/200",
+      "source": "src/platform-api.js",
+      "anchor": "/vlabpassportapi/v1/course/term-list",
+      "upstream": "Yanhekt.search",
+      "sourceProject": "refine",
+      "responseExample": {
+        "code": 1000,
+        "params": {
+          "list": [
+            {
+              "id": 1,
+              "term_name": "2026-2027-1"
+            }
+          ]
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.colleges",
+      "system": "modern",
+      "method": "GET",
+      "path": "/vlabpassportapi/v1/user/structures",
+      "effect": "read",
+      "request": "无业务参数",
+      "response": "params.data：院系树，id / display_name；code=1000/0/200",
+      "source": "src/platform-api.js",
+      "anchor": "/vlabpassportapi/v1/user/structures",
+      "upstream": "Yanhekt.search",
+      "sourceProject": "refine",
+      "responseExample": {
+        "code": 1000,
+        "params": {
+          "data": [
+            {
+              "id": 1,
+              "display_name": "示例学院"
+            }
+          ]
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.search",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/multi-search/get-course-list",
+      "effect": "read",
+      "request": "tenant, title, order, page, per_page=40；可选 term / struc_ids[]；tenant-id 请求头",
+      "response": "data.list / total；list 行含 id / title / realname / term_name / kkxy_name",
+      "source": "src/platform-api.js",
+      "anchor": "/courseapi/v3/multi-search/get-course-list",
+      "upstream": "Yanhekt.search",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "tenant",
+          "in": "query",
+          "required": true,
+          "description": "当前用户 tenant_id；21 是北理工观察值",
+          "schema": {
+            "type": "string"
+          },
+          "example": "21"
+        },
+        {
+          "name": "title",
+          "in": "query",
+          "required": false,
+          "description": "课程或教师关键词，空值表示未按关键词收窄",
+          "schema": {
+            "type": "string"
+          },
+          "example": "示例课程"
+        },
+        {
+          "name": "order",
+          "in": "query",
+          "required": false,
+          "description": "已见排序包括 c.created_at desc / asc 与 c.click_record_num desc",
+          "schema": {
+            "type": "string"
+          },
+          "example": "c.created_at desc"
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "页码，示例从 1 开始",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "per_page",
+          "in": "query",
+          "required": false,
+          "description": "请求页大小，非已验证的平台最大值",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 40
+        },
+        {
+          "name": "term",
+          "in": "query",
+          "required": false,
+          "description": "学期列表中查得的编号",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "struc_ids[]",
+          "in": "query",
+          "required": false,
+          "description": "院系树中查得的编号；参考客户端一次传一个",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "tenant-id",
+          "in": "header",
+          "required": true,
+          "description": "当前租户",
+          "schema": {
+            "type": "string"
+          },
+          "example": "21"
+        }
+      ],
+      "responseExample": {
+        "code": 0,
+        "data": {
+          "list": [
+            {
+              "id": 10001,
+              "title": "示例课程",
+              "realname": "示例教师",
+              "term_name": "2026-2027-1",
+              "kkxy_name": "示例学院"
+            }
+          ],
+          "total": 1
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.course",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/multi-search/get-course-detail",
+      "effect": "read",
+      "request": "course_id",
+      "response": "data.title / realname / term_name / sub_list / zhiyuan_id",
+      "source": "src/watch/api.js",
+      "anchor": "/courseapi/v3/multi-search/get-course-detail",
+      "upstream": "Yanhekt.course",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "query",
+          "required": true,
+          "description": "当前系统的课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        }
+      ],
+      "responseExample": {
+        "code": 0,
+        "data": {
+          "id": 10001,
+          "title": "示例课程",
+          "realname": "示例教师",
+          "term_name": "2026-2027-1",
+          "zhiyuan_id": "30001",
+          "sub_list": {
+            "group": [
+              {
+                "id": 200001,
+                "sub_title": "示例课次",
+                "playback_status": "1",
+                "class_begin": 1790000000
+              }
+            ]
+          }
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.today",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v2/course-live/get-my-course-day",
+      "effect": "read",
+      "request": "day：YYYY-MM-DD",
+      "response": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status",
+      "source": "src/platform-api.js",
+      "anchor": "/courseapi/v2/course-live/get-my-course-day",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "day",
+          "in": "query",
+          "required": true,
+          "description": "学校时区下的 YYYY-MM-DD",
+          "schema": {
+            "type": "string"
+          },
+          "example": "2026-10-27"
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.teacher-courses",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/multi-search/get-course-teacher-others",
+      "effect": "read",
+      "request": "course_id, per_page=20",
+      "response": "data[]：课程行；适配器排除测试条目",
+      "source": "src/platform-api.js",
+      "anchor": "/courseapi/v3/multi-search/get-course-teacher-others",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "query",
+          "required": true,
+          "description": "当前系统的课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        },
+        {
+          "name": "per_page",
+          "in": "query",
+          "required": false,
+          "description": "请求页大小，非已验证的平台最大值",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 20
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.lecture",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/portal-home-setting/get-sub-info",
+      "effect": "read",
+      "request": "course_id, sub_id",
+      "response": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+      "source": "src/watch/api.js",
+      "anchor": "/courseapi/v3/portal-home-setting/get-sub-info",
+      "upstream": "Yanhekt.lecture",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "query",
+          "required": true,
+          "description": "当前系统的课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        },
+        {
+          "name": "sub_id",
+          "in": "query",
+          "required": true,
+          "description": "本课程中实际返回的课次编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "200001"
+        }
+      ],
+      "responseExample": {
+        "code": 0,
+        "data": {
+          "duration": 8100,
+          "video_list": {
+            "example_screen": {
+              "type": 2,
+              "status": 2,
+              "preview_url": "https://aita.yanhekt.cn/play/example/screen.mp4"
+            }
+          }
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.page-permission",
+      "system": "modern",
+      "method": "GET",
+      "path": "/coursesourceapi/course/study-auth/{courseId}/{subId}",
+      "effect": "read",
+      "request": "路径课程、课次编号；Tenant-Id 与当前 profile.account 对应的 username 请求头",
+      "response": "code=200；data.hasPermission：页面许可诊断值",
+      "source": "src/watch/api.js",
+      "anchor": "/coursesourceapi/course/study-auth/${courseId}/${subId}",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "Tenant-Id",
+          "in": "header",
+          "required": true,
+          "description": "当前租户",
+          "schema": {
+            "type": "string"
+          },
+          "example": "21"
+        },
+        {
+          "name": "username",
+          "in": "header",
+          "required": true,
+          "description": "当前 profile.account，不是任意其它账号",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responseExample": {
+        "code": 200,
+        "data": {
+          "hasPermission": true
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.subtitles",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/web-socket/search-trans-result",
+      "effect": "read",
+      "request": "sub_id, format=json",
+      "response": "list[].all_content[]：BeginSec / EndSec / Text；时间单位秒",
+      "source": "src/watch/api.js",
+      "anchor": "/courseapi/v3/web-socket/search-trans-result",
+      "upstream": "Yanhekt.fast_transcript",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "sub_id",
+          "in": "query",
+          "required": true,
+          "description": "课次编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "200001"
+        },
+        {
+          "name": "format",
+          "in": "query",
+          "required": false,
+          "description": "本文描述 JSON 格式",
+          "schema": {
+            "type": "string"
+          },
+          "example": "json"
+        }
+      ],
+      "responseExample": {
+        "code": 0,
+        "list": [
+          {
+            "all_content": [
+              {
+                "BeginSec": 68,
+                "EndSec": 72,
+                "Text": "示例字幕。"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.materials",
+      "system": "modern",
+      "method": "GET",
+      "path": "/courseapi/v3/course-share-resource/get-course-resource",
+      "effect": "read",
+      "request": "course_id, page, per_page=100",
+      "response": "data[]：id / resource_id / old_resource_id / resource_name / resource_suffix / resource_size",
+      "source": "src/platform-api.js",
+      "anchor": "/courseapi/v3/course-share-resource/get-course-resource",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "query",
+          "required": true,
+          "description": "当前系统的课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "页码，示例从 1 开始",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "per_page",
+          "in": "query",
+          "required": false,
+          "description": "请求页大小，非已验证的平台最大值",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 100
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "modern.material-download",
+      "system": "modern",
+      "method": "GET",
+      "path": "/spidermaterial/spider-material/web/download/dlUrl",
+      "effect": "read",
+      "request": "ids：平台资料的 resource_id 或 old_resource_id",
+      "response": "state=200；data：下载地址字符串",
+      "source": "src/platform-api.js",
+      "anchor": "/spidermaterial/spider-material/web/download/dlUrl",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "ids",
+          "in": "query",
+          "required": true,
+          "description": "resource_id 或 old_resource_id；不是资料行 id",
+          "schema": {
+            "type": "string"
+          },
+          "example": "80001"
+        }
+      ],
+      "responseExample": {
+        "state": 200,
+        "data": "https://aita.yanhekt.cn/example/handout.pdf"
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.profile",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/user",
+      "effect": "read",
+      "request": "无业务参数",
+      "response": "code=0；data.id / badge",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "/v1/user",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.enrolled",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v2/course/private/list",
+      "effect": "read",
+      "request": "page, page_size=100, user_relationship_type=1",
+      "response": "data.data / last_page / total；课程含 name_zh / professors / school_year / semester",
+      "source": "src/platform-api.js",
+      "anchor": "/v2/course/private/list",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "页码，示例从 1 开始",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "page_size",
+          "in": "query",
+          "required": false,
+          "description": "参考客户端页大小",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 100
+        },
+        {
+          "name": "user_relationship_type",
+          "in": "query",
+          "required": false,
+          "description": "参考客户端取本人关系",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.course",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/course",
+      "effect": "read",
+      "request": "id：课程编号；with_professor_badges=true",
+      "response": "data.id / name_zh / professors / school_year / semester",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "'/v1/course'",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "description": "旧站课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        },
+        {
+          "name": "with_professor_badges",
+          "in": "query",
+          "required": false,
+          "description": "请求教师徽章信息",
+          "schema": {
+            "type": "boolean"
+          },
+          "example": true
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.sessions",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v2/course/session/list",
+      "effect": "read",
+      "request": "course_id",
+      "response": "data[]：session.id / started_at / title / videos[]",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "/v2/course/session/list",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "course_id",
+          "in": "query",
+          "required": true,
+          "description": "当前系统的课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responseExample": {
+        "code": 0,
+        "data": [
+          {
+            "id": 400001,
+            "title": "示例课次",
+            "started_at": "2026-09-23 08:00:00",
+            "videos": [
+              {
+                "id": 500001,
+                "duration": 5400,
+                "vga": "https://cvideo.yanhekt.cn/example/screen.m3u8"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.session",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/course/session",
+      "effect": "read",
+      "request": "session_id, with_video=true",
+      "response": "data 中的课程及课次编号；用于旧 session 链接解析",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "'/v1/course/session'",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "session_id",
+          "in": "query",
+          "required": true,
+          "description": "旧站 session 编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "400001"
+        },
+        {
+          "name": "with_video",
+          "in": "query",
+          "required": false,
+          "description": "",
+          "schema": {
+            "type": "boolean"
+          },
+          "example": true
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.live",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/live",
+      "effect": "read",
+      "request": "id：直播编号；with_session=true, with_course=true",
+      "response": "data.course_id / session_id / status / target / target_vga / target_room",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "'/v1/live'",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "description": "旧站 live 编号，非课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "90001"
+        },
+        {
+          "name": "with_session",
+          "in": "query",
+          "required": false,
+          "description": "",
+          "schema": {
+            "type": "boolean"
+          },
+          "example": true
+        },
+        {
+          "name": "with_course",
+          "in": "query",
+          "required": false,
+          "description": "",
+          "schema": {
+            "type": "boolean"
+          },
+          "example": true
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.video-token",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/auth/video/token",
+      "effect": "read",
+      "request": "id：当前 profile.badge 或 0",
+      "response": "data.token / expired_at / now：短期播放凭据及有效期",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "/v1/auth/video/token",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "description": "当前用户 badge；参考客户端缺省 0，不能当课程 ID",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "legacy.subtitles",
+      "system": "legacy",
+      "method": "GET",
+      "path": "/v1/video/subtitle/list",
+      "effect": "read",
+      "request": "video_id：视频编号，非课程或 session 编号",
+      "response": "data[]：language / url / src；再读取选中的 VTT/SRT 文件",
+      "source": "src/watch/legacy-api.js",
+      "anchor": "/v1/video/subtitle/list",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "video_id",
+          "in": "query",
+          "required": true,
+          "description": "旧站 video 编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "500001"
+        },
+        {
+          "name": "Xdomain-Client",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "web_user"
+        },
+        {
+          "name": "Xclient-Version",
+          "in": "header",
+          "required": true,
+          "description": "",
+          "schema": {
+            "type": "string"
+          },
+          "example": "v1"
+        },
+        {
+          "name": "Xclient-Timestamp",
+          "in": "header",
+          "required": true,
+          "description": "当前 Unix 秒",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Xclient-Signature",
+          "in": "header",
+          "required": true,
+          "description": "旧 API 请求签名，见 docs/legacy.md",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.courses",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/my-courses",
+      "effect": "read",
+      "request": "无业务参数",
+      "response": "courses[] 或 data.courses[]：本人课程",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/my-courses",
+      "sourceProject": "refine",
+      "responseExample": {
+        "courses": [
+          {
+            "id": 30001,
+            "name": "示例课程",
+            "academic_year": "2026-2027",
+            "semester": 1
+          }
+        ]
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.course-page",
+      "system": "lms",
+      "method": "GET",
+      "path": "/course/{courseId}/content",
+      "effect": "read",
+      "request": "路径课程编号",
+      "response": "HTML；#userId 的 data-id：当前学生编号",
+      "source": "src/lms-reader.js",
+      "anchor": "/course/${numeric(courseId)}/content",
+      "sourceProject": "refine",
+      "responseTypes": [
+        "text/html"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.activities",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/course/{courseId}/courseware-activities",
+      "effect": "read",
+      "request": "路径课程编号",
+      "response": "数组或 learning_activities / courseware_activities / activities；检查 published 与活动归属",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/course/${courseId}/courseware-activities",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.homeworks",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/courses/{courseId}/homework-activities",
+      "effect": "read",
+      "request": "路径课程编号；page=1..100",
+      "response": "homework_activities / page / pages",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/courses/${id}/homework-activities?page=${n}",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "页码，示例从 1 开始",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.homework-status",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/course/{courseId}/homework/submission-status",
+      "effect": "read",
+      "request": "路径课程编号",
+      "response": "homework_activities[]：id / status 等；失败时状态保持 unknown",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/course/${id}/homework/submission-status",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.resources",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/activities/{activityId}/resources",
+      "effect": "read",
+      "request": "路径活动编号；先检查本人课程和已发布活动",
+      "response": "uploads[]：id / reference_id / name / size / type / allow_download / deleted",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/activities/${id}/resources",
+      "sourceProject": "refine",
+      "responseExample": {
+        "uploads": [
+          {
+            "id": 60001,
+            "reference_id": 61001,
+            "name": "example.bin",
+            "size": 3,
+            "type": "file",
+            "allow_download": true,
+            "deleted": false
+          }
+        ]
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.task",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/activities/{activityId}",
+      "effect": "read",
+      "request": "路径作业活动编号",
+      "response": "course_id / type / data / uploads / is_in_progress / is_closed / submit_times 等",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/activities/${id}`",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.current-group",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/group-sets/{groupSetId}/group",
+      "effect": "read",
+      "request": "当前作业 group_set_id",
+      "response": "group.id / name；没有小组时禁止提交",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/group-sets/${numeric(detail.groupSetId)}/group",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.student-history",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/activities/{activityId}/students/{userId}/submission_list",
+      "effect": "read",
+      "request": "活动编号；userId 由当前会话课程页读取",
+      "response": "list[]：id / comment / created_at / is_draft / is_redo / uploads",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/activities/${id}/students/${userId}/submission_list",
+      "sourceProject": "refine",
+      "responseExample": {
+        "list": [
+          {
+            "id": 70001,
+            "comment": "",
+            "is_draft": false,
+            "uploads": [
+              {
+                "id": 60001,
+                "name": "example.bin",
+                "size": 3,
+                "allow_download": true
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.group-history",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/activities/{activityId}/groups/{groupId}/submission_list",
+      "effect": "read",
+      "request": "活动编号；groupId 来自当前学生所属小组",
+      "response": "list[]：小组提交记录，字段同本人记录",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/activities/${id}/groups/${numeric(group.id)}/submission_list",
+      "sourceProject": "refine",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.reference-download",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/uploads/reference/{referenceId}/blob",
+      "effect": "read",
+      "request": "附件 reference_id；仅 allow_download 开放时使用",
+      "response": "文件或平台下载重定向；由浏览器下载 API 接收",
+      "source": "src/lms-core.js",
+      "anchor": "/api/uploads/reference/${ref}/blob",
+      "sourceProject": "refine",
+      "responseTypes": [
+        "application/octet-stream"
+      ],
+      "note": "响应可能重定向到文件服务；Web fetch 的 CORS 能力与浏览器下载不同。",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.own-download",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/uploads/{uploadId}/blob",
+      "effect": "read",
+      "request": "附件没有 reference_id 时使用其 id；仍检查 allow_download",
+      "response": "文件或下载重定向；用于个人提交附件等场景",
+      "source": "src/lms-core.js",
+      "anchor": "/api/uploads/${id}/blob",
+      "sourceProject": "refine",
+      "responseTypes": [
+        "application/octet-stream"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.folder-download",
+      "system": "lms",
+      "method": "GET",
+      "path": "/zip/uploads",
+      "effect": "read",
+      "request": "timezone=-480, upload_ids：已开放下载的文件夹编号",
+      "response": "平台生成的 ZIP 下载",
+      "source": "src/lms-core.js",
+      "anchor": "/zip/uploads?timezone=-480&upload_ids=${file.id}",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "timezone",
+          "in": "query",
+          "required": false,
+          "description": "参考客户端使用的学校时区偏移表示",
+          "schema": {
+            "type": "integer"
+          },
+          "example": -480
+        },
+        {
+          "name": "upload_ids",
+          "in": "query",
+          "required": true,
+          "description": "开放下载的文件夹编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "60001"
+        }
+      ],
+      "responseTypes": [
+        "application/octet-stream"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.create-upload",
+      "system": "lms",
+      "method": "POST",
+      "path": "/api/uploads",
+      "effect": "write",
+      "request": "JSON：name / size / parent_type / parent_id 等固定字段，见正文",
+      "response": "id / upload_url / storage_type / transcoder；此步尚未传文件字节",
+      "source": "src/lms-writer.js",
+      "anchor": "'/api/uploads'",
+      "sourceProject": "refine",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "example.bin"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "字节数；未声明平台大小上限",
+                  "example": 3
+                },
+                "parent_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                },
+                "parent_id": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "is_scorm": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "is_wmpkg": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "source": {
+                  "type": "string",
+                  "example": ""
+                },
+                "is_marked_attachment": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "embed_material_type": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "required": [
+                "name",
+                "size"
+              ],
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "responseExample": {
+        "id": 60001,
+        "upload_url": "https://zy-media.bit.edu.cn/upload/file/60001",
+        "storage_type": "MEDIA",
+        "transcoder": "MEDIA",
+        "status": "ready"
+      },
+      "successStatus": "201",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.upload-media",
+      "system": "lms",
+      "method": "PUT",
+      "origin": "https://zy-media.bit.edu.cn",
+      "path": "/upload/file/{uploadId}",
+      "effect": "write",
+      "request": "使用创建上传返回的完整 upload_url；MEDIA 发送 FormData.file",
+      "response": "HTTP 2xx 后，再 GET /api/uploads/{uploadId} 校验",
+      "source": "src/lms-writer.js",
+      "anchor": "/upload/file/${numeric(info.id)}",
+      "note": "还支持 upload_url 为新乐学同源地址的 LOCAL / S3-WRPC 分支；绝不能把媒体 URL 截成 path 后拼回新乐学域名。 同源 LOCAL/S3 分支使用服务端返回的完整 URL，不由这个固定 MEDIA path 推导。",
+      "sourceProject": "refine",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "required": [
+                "file"
+              ]
+            }
+          }
+        }
+      },
+      "responseTypes": [],
+      "security": [],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.upload-status",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/uploads/{uploadId}",
+      "effect": "read",
+      "request": "本次创建并上传的文件编号",
+      "response": "id / status / deleted；适配器接受 ready / processing",
+      "source": "src/lms-writer.js",
+      "anchor": "/api/uploads/${uploadId}",
+      "sourceProject": "refine",
+      "responseExample": {
+        "id": 60001,
+        "status": "ready",
+        "deleted": false
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.upload-callback",
+      "system": "lms",
+      "method": "POST",
+      "path": "/internal-api/upload/callback/{uploadId}",
+      "effect": "write",
+      "request": "仅 S3 + WRPC 分支；JSON：file_key 为数值 uploadId",
+      "response": "平台 JSON；MEDIA 分支不发此请求",
+      "source": "src/lms-writer.js",
+      "anchor": "/internal-api/upload/callback/${uploadId}",
+      "sourceProject": "refine",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file_key": {
+                  "type": "integer",
+                  "description": "参考客户端传本次 uploadId 的数值形式",
+                  "example": 60001
+                }
+              },
+              "required": [
+                "file_key"
+              ],
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lms.submit",
+      "system": "lms",
+      "method": "POST",
+      "path": "/api/course/activities/{activityId}/submissions",
+      "effect": "write",
+      "request": "JSON：comment / uploads / slides / is_draft / mode / other_resources / uploads_in_rich_text",
+      "response": "兼容 submission.id / submission_id / id / HTTP 204；必须回读记录确认",
+      "source": "src/lms-writer.js",
+      "anchor": "/api/course/activities/${id}/submissions",
+      "sourceProject": "refine",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "description": "已清理或由转义文本构成的 HTML",
+                  "example": "<p>示例说明</p>"
+                },
+                "uploads": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "example": [
+                    60001
+                  ]
+                },
+                "slides": {
+                  "type": "array",
+                  "items": {},
+                  "example": []
+                },
+                "is_draft": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "mode": {
+                  "type": "string",
+                  "description": "本规范仅描述普通文件作业 normal 模式",
+                  "example": "normal"
+                },
+                "other_resources": {
+                  "type": "array",
+                  "items": {},
+                  "example": []
+                },
+                "uploads_in_rich_text": {
+                  "type": "array",
+                  "items": {},
+                  "example": []
+                }
+              },
+              "required": [
+                "uploads",
+                "is_draft",
+                "mode"
+              ],
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "responseExample": {
+        "submission": {
+          "id": 70001
+        }
+      },
+      "successStatus": "201",
+      "additionalSuccessStatuses": [
+        "204"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lexue.overview",
+      "system": "lexue",
+      "method": "GET",
+      "path": "/my/",
+      "effect": "read",
+      "request": "当前浏览器会话",
+      "response": "HTML；从 M.cfg 读取 wwwroot 与当前 sesskey",
+      "source": "src/lexue-reader.js",
+      "anchor": "'/my/'",
+      "sourceProject": "refine",
+      "responseTypes": [
+        "text/html"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lexue.courses",
+      "system": "lexue",
+      "method": "POST",
+      "path": "/lib/ajax/service.php",
+      "effect": "read",
+      "request": "query：sesskey / info；JSON RPC：core_course_get_enrolled_courses_by_timeline_classification",
+      "response": "[0].data.courses / nextoffset；此 POST 是课程读取",
+      "source": "src/lexue-reader.js",
+      "anchor": "/lib/ajax/service.php?",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "sesskey",
+          "in": "query",
+          "required": true,
+          "description": "当前 M.cfg.sesskey；不保存为公开 API key",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "info",
+          "in": "query",
+          "required": false,
+          "description": "RPC 方法标识",
+          "schema": {
+            "type": "string"
+          },
+          "example": "core_course_get_enrolled_courses_by_timeline_classification"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "example": [
+              {
+                "index": 0,
+                "methodname": "core_course_get_enrolled_courses_by_timeline_classification",
+                "args": {
+                  "classification": "all",
+                  "limit": 100,
+                  "offset": 0,
+                  "sort": "fullname"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "responseExample": [
+        {
+          "error": false,
+          "data": {
+            "courses": [
+              {
+                "id": 10001,
+                "fullname": "示例课程",
+                "visible": true
+              }
+            ],
+            "nextoffset": 1
+          }
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lexue.course-page",
+      "system": "lexue",
+      "method": "GET",
+      "path": "/course/view.php",
+      "effect": "read",
+      "request": "id：本人旧乐学课程编号",
+      "response": "HTML；body.course-{id} 与 .activity 列表",
+      "source": "src/lexue-reader.js",
+      "anchor": "/course/view.php?id=",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "description": "本人旧乐学课程编号",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10001"
+        }
+      ],
+      "responseTypes": [
+        "text/html"
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lexue.module",
+      "system": "lexue",
+      "method": "GET",
+      "path": "/mod/{module}/view.php",
+      "effect": "read",
+      "request": "id：课程页中实际出现的 module 编号；支持类型见正文",
+      "response": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0",
+      "source": "src/lexue-core.js",
+      "anchor": "/mod/${type}/view.php",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "description": "课程页中实际出现的 module ID",
+          "schema": {
+            "type": "string"
+          },
+          "example": "30001"
+        }
+      ],
+      "responseTypes": [
+        "text/html",
+        "application/octet-stream"
+      ],
+      "note": "module 占位只描述已观察模块族；URL 活动仅保留入口，不保证抓取外部目标。",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    },
+    {
+      "id": "lexue.file",
+      "system": "lexue",
+      "method": "GET",
+      "path": "/pluginfile.php/{contextId}/{filePath}",
+      "effect": "read",
+      "request": "只能使用页面真实附件链接；forcedownload=1",
+      "response": "文件；由浏览器下载 API 接收，不拼接猜测文件路径",
+      "source": "src/lexue-core.js",
+      "anchor": "/pluginfile",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "forcedownload",
+          "in": "query",
+          "required": false,
+          "description": "参考下载链接显式使用 1",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        }
+      ],
+      "responseTypes": [
+        "application/octet-stream"
+      ],
+      "note": "filePath 包含多个路径段，仅作路径族展示；使用真实完整链接，避免代码生成器错误编码斜杠。",
+      "evidenceLevel": "source",
+      "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
+    }
+  ],
+  "title": "延河课堂接口参考",
+  "sources": {
+    "refine": {
+      "repository": "https://github.com/1whoarei1/yanhe-refine",
+      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+      "implementationVersion": "0.9.3"
+    },
+    "yanhekit": {
+      "repository": "https://github.com/windlandneko/yanhekit",
+      "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
+      "license": "AGPL-3.0",
+      "client": "skills/yanhekit/scripts/client.py"
+    }
+  },
+  "verification": "本次为源码对照；真实场景范围另见 docs/verification.md，示例均为合成数据"
+}

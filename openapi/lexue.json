@@ -1,0 +1,354 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "延河课堂接口参考 - 旧乐学 Moodle",
+    "version": "0.1.0",
+    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://lexue.bit.edu.cn"
+    }
+  ],
+  "security": [
+    {
+      "sessionCookieHeader": []
+    }
+  ],
+  "paths": {
+    "/my/": {
+      "get": {
+        "operationId": "lexue_overview",
+        "summary": "当前浏览器会话",
+        "description": "HTML；从 M.cfg 读取 wwwroot 与当前 sesskey\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lexue"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "HTML；从 M.cfg 读取 wwwroot 与当前 sesskey",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lexue-reader.js",
+          "anchor": "'/my/'",
+          "level": "source"
+        },
+        "x-response-fields": "HTML；从 M.cfg 读取 wwwroot 与当前 sesskey"
+      }
+    },
+    "/lib/ajax/service.php": {
+      "post": {
+        "operationId": "lexue_courses",
+        "summary": "query：sesskey / info；JSON RPC：core_course_get_enrolled_courses_by_timeline_classification",
+        "description": "[0].data.courses / nextoffset；此 POST 是课程读取\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lexue"
+        ],
+        "parameters": [
+          {
+            "name": "sesskey",
+            "in": "query",
+            "required": true,
+            "description": "当前 M.cfg.sesskey；不保存为公开 API key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "info",
+            "in": "query",
+            "required": false,
+            "description": "RPC 方法标识",
+            "schema": {
+              "type": "string"
+            },
+            "example": "core_course_get_enrolled_courses_by_timeline_classification"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[0].data.courses / nextoffset；此 POST 是课程读取",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": [
+                      {
+                        "error": false,
+                        "data": {
+                          "courses": [
+                            {
+                              "id": 10001,
+                              "fullname": "示例课程",
+                              "visible": true
+                            }
+                          ],
+                          "nextoffset": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lexue-reader.js",
+          "anchor": "/lib/ajax/service.php?",
+          "level": "source"
+        },
+        "x-response-fields": "[0].data.courses / nextoffset；此 POST 是课程读取",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "example": [
+                {
+                  "index": 0,
+                  "methodname": "core_course_get_enrolled_courses_by_timeline_classification",
+                  "args": {
+                    "classification": "all",
+                    "limit": 100,
+                    "offset": 0,
+                    "sort": "fullname"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/course/view.php": {
+      "get": {
+        "operationId": "lexue_course_page",
+        "summary": "id：本人旧乐学课程编号",
+        "description": "HTML；body.course-{id} 与 .activity 列表\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lexue"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "本人旧乐学课程编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "10001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML；body.course-{id} 与 .activity 列表",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lexue-reader.js",
+          "anchor": "/course/view.php?id=",
+          "level": "source"
+        },
+        "x-response-fields": "HTML；body.course-{id} 与 .activity 列表"
+      }
+    },
+    "/mod/{module}/view.php": {
+      "get": {
+        "operationId": "lexue_module",
+        "summary": "id：课程页中实际出现的 module 编号；支持类型见正文",
+        "description": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0\n\nmodule 占位只描述已观察模块族；URL 活动仅保留入口，不保证抓取外部目标。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lexue"
+        ],
+        "parameters": [
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "课程页中实际出现的 module ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "30001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lexue-core.js",
+          "anchor": "/mod/${type}/view.php",
+          "level": "source"
+        },
+        "x-response-fields": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0"
+      }
+    },
+    "/pluginfile.php/{contextId}/{filePath}": {
+      "get": {
+        "operationId": "lexue_file",
+        "summary": "只能使用页面真实附件链接；forcedownload=1",
+        "description": "文件；由浏览器下载 API 接收，不拼接猜测文件路径\n\nfilePath 包含多个路径段，仅作路径族展示；使用真实完整链接，避免代码生成器错误编码斜杠。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lexue"
+        ],
+        "parameters": [
+          {
+            "name": "contextId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filePath",
+            "in": "path",
+            "required": true,
+            "description": "真实附件路径后缀，可能含多个路径段；直接使用平台返回的完整链接。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "forcedownload",
+            "in": "query",
+            "required": false,
+            "description": "参考下载链接显式使用 1",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件；由浏览器下载 API 接收，不拼接猜测文件路径",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lexue-core.js",
+          "anchor": "/pluginfile",
+          "level": "source"
+        },
+        "x-response-fields": "文件；由浏览器下载 API 接收，不拼接猜测文件路径"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookieHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Cookie",
+        "description": "已有合法登录会话的 Cookie 头。浏览器前端不能手动设置该头，需使用其现有会话与 credentials；这里不定义未知的 Cookie 名。"
+      }
+    }
+  },
+  "x-checked-at": "2026-10-27",
+  "x-sources": {
+    "refine": {
+      "repository": "https://github.com/1whoarei1/yanhe-refine",
+      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+      "implementationVersion": "0.9.3"
+    },
+    "yanhekit": {
+      "repository": "https://github.com/windlandneko/yanhekit",
+      "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
+      "license": "AGPL-3.0",
+      "client": "skills/yanhekit/scripts/client.py"
+    }
+  }
+}

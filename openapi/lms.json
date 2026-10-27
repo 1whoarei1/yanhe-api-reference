@@ -1,0 +1,1124 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "延河课堂接口参考 - 新乐学",
+    "version": "0.1.0",
+    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://zy-eclass.bit.edu.cn"
+    }
+  ],
+  "security": [
+    {
+      "sessionCookieHeader": []
+    }
+  ],
+  "paths": {
+    "/api/my-courses": {
+      "get": {
+        "operationId": "lms_courses",
+        "summary": "无业务参数",
+        "description": "courses[] 或 data.courses[]：本人课程\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "courses[] 或 data.courses[]：本人课程",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "courses": [
+                        {
+                          "id": 30001,
+                          "name": "示例课程",
+                          "academic_year": "2026-2027",
+                          "semester": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/my-courses",
+          "level": "source"
+        },
+        "x-response-fields": "courses[] 或 data.courses[]：本人课程"
+      }
+    },
+    "/course/{courseId}/content": {
+      "get": {
+        "operationId": "lms_course_page",
+        "summary": "路径课程编号",
+        "description": "HTML；#userId 的 data-id：当前学生编号\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML；#userId 的 data-id：当前学生编号",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/course/${numeric(courseId)}/content",
+          "level": "source"
+        },
+        "x-response-fields": "HTML；#userId 的 data-id：当前学生编号"
+      }
+    },
+    "/api/course/{courseId}/courseware-activities": {
+      "get": {
+        "operationId": "lms_activities",
+        "summary": "路径课程编号",
+        "description": "数组或 learning_activities / courseware_activities / activities；检查 published 与活动归属\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "数组或 learning_activities / courseware_activities / activities；检查 published 与活动归属",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/course/${courseId}/courseware-activities",
+          "level": "source"
+        },
+        "x-response-fields": "数组或 learning_activities / courseware_activities / activities；检查 published 与活动归属"
+      }
+    },
+    "/api/courses/{courseId}/homework-activities": {
+      "get": {
+        "operationId": "lms_homeworks",
+        "summary": "路径课程编号；page=1..100",
+        "description": "homework_activities / page / pages\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "页码，示例从 1 开始",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "homework_activities / page / pages",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/courses/${id}/homework-activities?page=${n}",
+          "level": "source"
+        },
+        "x-response-fields": "homework_activities / page / pages"
+      }
+    },
+    "/api/course/{courseId}/homework/submission-status": {
+      "get": {
+        "operationId": "lms_homework_status",
+        "summary": "路径课程编号",
+        "description": "homework_activities[]：id / status 等；失败时状态保持 unknown\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "homework_activities[]：id / status 等；失败时状态保持 unknown",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/course/${id}/homework/submission-status",
+          "level": "source"
+        },
+        "x-response-fields": "homework_activities[]：id / status 等；失败时状态保持 unknown"
+      }
+    },
+    "/api/activities/{activityId}/resources": {
+      "get": {
+        "operationId": "lms_resources",
+        "summary": "路径活动编号；先检查本人课程和已发布活动",
+        "description": "uploads[]：id / reference_id / name / size / type / allow_download / deleted\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "uploads[]：id / reference_id / name / size / type / allow_download / deleted",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "uploads": [
+                        {
+                          "id": 60001,
+                          "reference_id": 61001,
+                          "name": "example.bin",
+                          "size": 3,
+                          "type": "file",
+                          "allow_download": true,
+                          "deleted": false
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/activities/${id}/resources",
+          "level": "source"
+        },
+        "x-response-fields": "uploads[]：id / reference_id / name / size / type / allow_download / deleted"
+      }
+    },
+    "/api/activities/{activityId}": {
+      "get": {
+        "operationId": "lms_task",
+        "summary": "路径作业活动编号",
+        "description": "course_id / type / data / uploads / is_in_progress / is_closed / submit_times 等\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "course_id / type / data / uploads / is_in_progress / is_closed / submit_times 等",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/activities/${id}`",
+          "level": "source"
+        },
+        "x-response-fields": "course_id / type / data / uploads / is_in_progress / is_closed / submit_times 等"
+      }
+    },
+    "/api/group-sets/{groupSetId}/group": {
+      "get": {
+        "operationId": "lms_current_group",
+        "summary": "当前作业 group_set_id",
+        "description": "group.id / name；没有小组时禁止提交\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "groupSetId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "group.id / name；没有小组时禁止提交",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/group-sets/${numeric(detail.groupSetId)}/group",
+          "level": "source"
+        },
+        "x-response-fields": "group.id / name；没有小组时禁止提交"
+      }
+    },
+    "/api/activities/{activityId}/students/{userId}/submission_list": {
+      "get": {
+        "operationId": "lms_student_history",
+        "summary": "活动编号；userId 由当前会话课程页读取",
+        "description": "list[]：id / comment / created_at / is_draft / is_redo / uploads\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list[]：id / comment / created_at / is_draft / is_redo / uploads",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "list": [
+                        {
+                          "id": 70001,
+                          "comment": "",
+                          "is_draft": false,
+                          "uploads": [
+                            {
+                              "id": 60001,
+                              "name": "example.bin",
+                              "size": 3,
+                              "allow_download": true
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/activities/${id}/students/${userId}/submission_list",
+          "level": "source"
+        },
+        "x-response-fields": "list[]：id / comment / created_at / is_draft / is_redo / uploads"
+      }
+    },
+    "/api/activities/{activityId}/groups/{groupId}/submission_list": {
+      "get": {
+        "operationId": "lms_group_history",
+        "summary": "活动编号；groupId 来自当前学生所属小组",
+        "description": "list[]：小组提交记录，字段同本人记录\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list[]：小组提交记录，字段同本人记录",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/activities/${id}/groups/${numeric(group.id)}/submission_list",
+          "level": "source"
+        },
+        "x-response-fields": "list[]：小组提交记录，字段同本人记录"
+      }
+    },
+    "/api/uploads/reference/{referenceId}/blob": {
+      "get": {
+        "operationId": "lms_reference_download",
+        "summary": "附件 reference_id；仅 allow_download 开放时使用",
+        "description": "文件或平台下载重定向；由浏览器下载 API 接收\n\n响应可能重定向到文件服务；Web fetch 的 CORS 能力与浏览器下载不同。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "referenceId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件或平台下载重定向；由浏览器下载 API 接收",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-core.js",
+          "anchor": "/api/uploads/reference/${ref}/blob",
+          "level": "source"
+        },
+        "x-response-fields": "文件或平台下载重定向；由浏览器下载 API 接收"
+      }
+    },
+    "/api/uploads/{uploadId}/blob": {
+      "get": {
+        "operationId": "lms_own_download",
+        "summary": "附件没有 reference_id 时使用其 id；仍检查 allow_download",
+        "description": "文件或下载重定向；用于个人提交附件等场景\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件或下载重定向；用于个人提交附件等场景",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-core.js",
+          "anchor": "/api/uploads/${id}/blob",
+          "level": "source"
+        },
+        "x-response-fields": "文件或下载重定向；用于个人提交附件等场景"
+      }
+    },
+    "/zip/uploads": {
+      "get": {
+        "operationId": "lms_folder_download",
+        "summary": "timezone=-480, upload_ids：已开放下载的文件夹编号",
+        "description": "平台生成的 ZIP 下载\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": false,
+            "description": "参考客户端使用的学校时区偏移表示",
+            "schema": {
+              "type": "integer"
+            },
+            "example": -480
+          },
+          {
+            "name": "upload_ids",
+            "in": "query",
+            "required": true,
+            "description": "开放下载的文件夹编号",
+            "schema": {
+              "type": "string"
+            },
+            "example": "60001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "平台生成的 ZIP 下载",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-core.js",
+          "anchor": "/zip/uploads?timezone=-480&upload_ids=${file.id}",
+          "level": "source"
+        },
+        "x-response-fields": "平台生成的 ZIP 下载"
+      }
+    },
+    "/api/uploads": {
+      "post": {
+        "operationId": "lms_create_upload",
+        "summary": "JSON：name / size / parent_type / parent_id 等固定字段，见正文",
+        "description": "id / upload_url / storage_type / transcoder；此步尚未传文件字节\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "required": false,
+            "description": "仅在当前会话存在 XSRF-TOKEN 时由其 URL 解码取得。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "id / upload_url / storage_type / transcoder；此步尚未传文件字节",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "id": 60001,
+                      "upload_url": "https://zy-media.bit.edu.cn/upload/file/60001",
+                      "storage_type": "MEDIA",
+                      "transcoder": "MEDIA",
+                      "status": "ready"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "write",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-writer.js",
+          "anchor": "'/api/uploads'",
+          "level": "source"
+        },
+        "x-response-fields": "id / upload_url / storage_type / transcoder；此步尚未传文件字节",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "example.bin"
+                  },
+                  "size": {
+                    "type": "integer",
+                    "description": "字节数；未声明平台大小上限",
+                    "example": 3
+                  },
+                  "parent_type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "example": null
+                  },
+                  "parent_id": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "is_scorm": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "is_wmpkg": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "is_marked_attachment": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "embed_material_type": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "name",
+                  "size"
+                ],
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload/file/{uploadId}": {
+      "put": {
+        "operationId": "lms_upload_media",
+        "summary": "使用创建上传返回的完整 upload_url；MEDIA 发送 FormData.file",
+        "description": "HTTP 2xx 后，再 GET /api/uploads/{uploadId} 校验\n\n还支持 upload_url 为新乐学同源地址的 LOCAL / S3-WRPC 分支；绝不能把媒体 URL 截成 path 后拼回新乐学域名。 同源 LOCAL/S3 分支使用服务端返回的完整 URL，不由这个固定 MEDIA path 推导。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTTP 2xx 后，再 GET /api/uploads/{uploadId} 校验"
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "write",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-writer.js",
+          "anchor": "/upload/file/${numeric(info.id)}",
+          "level": "source"
+        },
+        "x-response-fields": "HTTP 2xx 后，再 GET /api/uploads/{uploadId} 校验",
+        "servers": [
+          {
+            "url": "https://zy-media.bit.edu.cn"
+          }
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/uploads/{uploadId}": {
+      "get": {
+        "operationId": "lms_upload_status",
+        "summary": "本次创建并上传的文件编号",
+        "description": "id / status / deleted；适配器接受 ready / processing\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "id / status / deleted；适配器接受 ready / processing",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "id": 60001,
+                      "status": "ready",
+                      "deleted": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-writer.js",
+          "anchor": "/api/uploads/${uploadId}",
+          "level": "source"
+        },
+        "x-response-fields": "id / status / deleted；适配器接受 ready / processing"
+      }
+    },
+    "/internal-api/upload/callback/{uploadId}": {
+      "post": {
+        "operationId": "lms_upload_callback",
+        "summary": "仅 S3 + WRPC 分支；JSON：file_key 为数值 uploadId",
+        "description": "平台 JSON；MEDIA 分支不发此请求\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "required": false,
+            "description": "仅在当前会话存在 XSRF-TOKEN 时由其 URL 解码取得。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "平台 JSON；MEDIA 分支不发此请求",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "write",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-writer.js",
+          "anchor": "/internal-api/upload/callback/${uploadId}",
+          "level": "source"
+        },
+        "x-response-fields": "平台 JSON；MEDIA 分支不发此请求",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_key": {
+                    "type": "integer",
+                    "description": "参考客户端传本次 uploadId 的数值形式",
+                    "example": 60001
+                  }
+                },
+                "required": [
+                  "file_key"
+                ],
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/course/activities/{activityId}/submissions": {
+      "post": {
+        "operationId": "lms_submit",
+        "summary": "JSON：comment / uploads / slides / is_draft / mode / other_resources / uploads_in_rich_text",
+        "description": "兼容 submission.id / submission_id / id / HTTP 204；必须回读记录确认\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "required": false,
+            "description": "仅在当前会话存在 XSRF-TOKEN 时由其 URL 解码取得。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "兼容 submission.id / submission_id / id / HTTP 204；必须回读记录确认",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "submission": {
+                        "id": 70001
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "参考客户端兼容的响应，仍需回读记录确认；不代表本次逐一实测。"
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "write",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "file": "src/lms-writer.js",
+          "anchor": "/api/course/activities/${id}/submissions",
+          "level": "source"
+        },
+        "x-response-fields": "兼容 submission.id / submission_id / id / HTTP 204；必须回读记录确认",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "description": "已清理或由转义文本构成的 HTML",
+                    "example": "<p>示例说明</p>"
+                  },
+                  "uploads": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "example": [
+                      60001
+                    ]
+                  },
+                  "slides": {
+                    "type": "array",
+                    "items": {},
+                    "example": []
+                  },
+                  "is_draft": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "本规范仅描述普通文件作业 normal 模式",
+                    "example": "normal"
+                  },
+                  "other_resources": {
+                    "type": "array",
+                    "items": {},
+                    "example": []
+                  },
+                  "uploads_in_rich_text": {
+                    "type": "array",
+                    "items": {},
+                    "example": []
+                  }
+                },
+                "required": [
+                  "uploads",
+                  "is_draft",
+                  "mode"
+                ],
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookieHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Cookie",
+        "description": "已有合法登录会话的 Cookie 头。浏览器前端不能手动设置该头，需使用其现有会话与 credentials；这里不定义未知的 Cookie 名。"
+      }
+    }
+  },
+  "x-checked-at": "2026-10-27",
+  "x-sources": {
+    "refine": {
+      "repository": "https://github.com/1whoarei1/yanhe-refine",
+      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+      "implementationVersion": "0.9.3"
+    },
+    "yanhekit": {
+      "repository": "https://github.com/windlandneko/yanhekit",
+      "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
+      "license": "AGPL-3.0",
+      "client": "skills/yanhekit/scripts/client.py"
+    }
+  }
+}
