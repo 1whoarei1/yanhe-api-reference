@@ -14,7 +14,7 @@ for(let i=2;i<process.argv.length;i++){
  if(process.argv[i]==='--write')continue;
  if(process.argv[i]!=='--source')throw new Error('Unknown argument: '+process.argv[i]);
  const value=process.argv[++i]||'',split=value.indexOf('='),name=value.slice(0,split);
- if(split<1||!index.sources[name])throw new Error('Expected --source refine=/path or --source yanhekit=/path');
+ if(split<1||!index.sources[name])throw new Error('Expected --source project=/path');
  checkouts.set(name,resolve(value.slice(split+1)));
 }
 const evidence=e=>{const ref=index.sources[e.sourceProject];return {repository:ref.repository,revision:ref.revision,file:e.source,anchor:e.anchor,level:e.evidenceLevel};};
@@ -34,16 +34,18 @@ const call=/(?:\.(?:json|get|post|response|html)|new URL)\(\s*(['"`])([^'"`\r\n]
 for(const [project,checkout]of checkouts){
  const ref=index.sources[project],files=new Map();
  const git=spawnSync('git',['-C',checkout,'rev-parse','HEAD'],{encoding:'utf8',windowsHide:true,timeout:10000});
- const revision=git.status===0?git.stdout.trim():null;
- if(project==='refine'){
-  for(const e of index.endpoints.filter(e=>e.sourceProject===project)){
+ const gitRoot=spawnSync('git',['-C',checkout,'rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true,timeout:10000});
+ const revision=git.status===0&&gitRoot.status===0&&resolve(gitRoot.stdout.trim())===checkout?git.stdout.trim():null;
+ if(project!=='yanhekit'){
+  for(const endpoint of index.endpoints.filter(e=>e.sourceProject===project||e.implementation?.project===project)){
+   const e=endpoint.sourceProject===project?endpoint:{...endpoint,...endpoint.implementation};
    const path=resolve(checkout,e.source);if(!within(checkout,path))throw new Error('Source outside checkout');
    if(!files.has(e.source))files.set(e.source,await readFile(path,'utf8'));
    if(!files.get(e.source).includes(e.anchor))throw new Error('Source anchor changed: '+e.id+' in '+e.source);
   }
-  for(const [file,text]of files)for(const match of text.matchAll(call)){
+  if(project==='refine')for(const [file,text]of files)for(const match of text.matchAll(call)){
    const path=match[2];if(!prefix.test(path))continue;
-   if(!index.endpoints.some(e=>e.sourceProject===project&&e.source===file&&normalize(e.path)===normalize(path)))throw new Error('Undocumented literal API call: '+file+' '+path);
+   if(!index.endpoints.some(e=>((e.sourceProject===project&&e.source===file)||(e.implementation?.project===project&&e.implementation.source===file))&&normalize(e.path)===normalize(path)))throw new Error('Undocumented literal API call: '+file+' '+path);
   }
  }else if(project==='yanhekit'){
   const text=await readFile(resolve(checkout,ref.client),'utf8');files.set(ref.client,text);
@@ -72,8 +74,8 @@ await ensureFile(readmePath,readme);
 
 for(const [system,meta]of Object.entries(index.systems)){
  const auth=['modern','legacy'].includes(system)?'bearerAuth':'sessionCookieHeader';
- const schemas=auth==='bearerAuth'?{bearerAuth:{type:'http',scheme:'bearer',description:meta.auth}}:{sessionCookieHeader:{type:'apiKey',in:'header',name:'Cookie',description:'已有合法登录会话的 Cookie 头。浏览器前端不能手动设置该头，需使用其现有会话与 credentials；这里不定义未知的 Cookie 名。'}};
- const document={openapi:'3.1.1',info:{title:index.title+' - '+meta.name,version:pkg.version,description:`社区观察规范。核对日期 ${index.checkedAt}；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。`,license:{name:'MIT',identifier:'MIT'}},servers:[{url:meta.origin}],security:[{[auth]:[]}],paths:{},components:{securitySchemes:schemas},'x-checked-at':index.checkedAt,'x-sources':index.sources};
+ const schemas=meta.public?{}:auth==='bearerAuth'?{bearerAuth:{type:'http',scheme:'bearer',description:meta.auth}}:{sessionCookieHeader:{type:'apiKey',in:'header',name:'Cookie',description:'已有合法登录会话的 Cookie 头。浏览器前端不能手动设置该头，需使用其现有会话与 credentials；这里不定义未知的 Cookie 名。'}};
+ const document={openapi:'3.1.1',info:{title:index.title+' - '+meta.name,version:pkg.version,description:`社区观察规范。核对日期 ${index.checkedAt}；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。`,license:{name:'MIT',identifier:'MIT'}},servers:[{url:meta.origin}],security:meta.public?[]:[{[auth]:[]}],paths:{},components:{securitySchemes:schemas},'x-checked-at':index.checkedAt,'x-sources':index.sources};
  for(const e of index.endpoints.filter(e=>e.system===system)){
   const parameters=[...e.path.matchAll(/\{([^}]+)\}/g)].map(m=>({name:m[1],in:'path',required:true,description:m[1]==='filePath'?'真实附件路径后缀，可能含多个路径段；直接使用平台返回的完整链接。':'所属系统返回的标识，避免跨平台或跨实体混用。',schema:{type:'string'}}));
   parameters.push(...structuredClone(e.parameters||[]));

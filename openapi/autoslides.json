@@ -1,0 +1,368 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "延河课堂接口参考 - 旧版课程索引（AutoSlides）",
+    "version": "0.2.0",
+    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://share.ruc.edu.kg"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/api/terms": {
+      "get": {
+        "operationId": "autoslides_terms",
+        "summary": "无业务参数",
+        "description": "terms；updatedAt 为毫秒或 null\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "tags": [
+          "autoslides"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "terms；updatedAt 为毫秒或 null",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "updatedAt": 1793000000000,
+                      "terms": [
+                        "2026-2027-1"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "share/docs/api.md",
+          "anchor": "GET /api/terms",
+          "level": "source"
+        },
+        "x-response-fields": "terms；updatedAt 为毫秒或 null",
+        "security": []
+      }
+    },
+    "/api/search": {
+      "get": {
+        "operationId": "autoslides_search",
+        "summary": "q；课程名 / 教师需 term，课程 ID / 教务编号可不指定",
+        "description": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "tags": [
+          "autoslides"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "查询课程；不接受 session URL",
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "required": false,
+            "description": "名称或教师搜索必需，恰好一个已索引学期",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "query": {
+                        "q": "示例课程",
+                        "term": "2026-2027-1"
+                      },
+                      "total": 1,
+                      "truncated": false,
+                      "results": [
+                        {
+                          "id": 10001,
+                          "name": "示例课程",
+                          "number": null,
+                          "term": "2026-2027-1",
+                          "teachers": [
+                            "示例教师"
+                          ],
+                          "sessionCount": 2,
+                          "match": {
+                            "fields": [
+                              "name"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "share/docs/api.md",
+          "anchor": "GET /api/search",
+          "level": "source"
+        },
+        "x-response-fields": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量",
+        "security": []
+      }
+    },
+    "/api/courses/{id}/sessions": {
+      "get": {
+        "operationId": "autoslides_sessions",
+        "summary": "id 是 course ID",
+        "description": "course；sessions 为独立的 session ID 数组\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "tags": [
+          "autoslides"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "course；sessions 为独立的 session ID 数组",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "course": 10001,
+                      "sessions": [
+                        400001,
+                        400002
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "share/docs/api.md",
+          "anchor": "GET /api/courses/{id}/sessions",
+          "level": "source"
+        },
+        "x-response-fields": "course；sessions 为独立的 session ID 数组",
+        "security": []
+      }
+    },
+    "/api/courses/{id}/yanhekt": {
+      "get": {
+        "operationId": "autoslides_course_metadata",
+        "summary": "id 是已索引 course ID；缓存 6 小时",
+        "description": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "tags": [
+          "autoslides"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "course": {
+                        "id": 10001,
+                        "nameZh": "示例课程",
+                        "nameEn": null,
+                        "code": null,
+                        "level": null,
+                        "college": null,
+                        "collegeEn": null,
+                        "image": null,
+                        "teachers": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "share/docs/api.md",
+          "anchor": "GET /api/courses/{id}/yanhekt",
+          "level": "source"
+        },
+        "x-response-fields": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers",
+        "security": []
+      }
+    },
+    "/api/courses/{id}/yanhekt/sessions": {
+      "get": {
+        "operationId": "autoslides_session_metadata",
+        "summary": "id 是 course ID；from 为偏移；每次 30 条，按 next 翻页",
+        "description": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "tags": [
+          "autoslides"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "所属系统返回的标识，避免跨平台或跨实体混用。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "course": 10001,
+                      "total": 1,
+                      "from": 0,
+                      "next": null,
+                      "sessions": [
+                        {
+                          "id": 400001,
+                          "title": "示例课次",
+                          "week": 1,
+                          "day": 1,
+                          "startedAt": null,
+                          "endedAt": null,
+                          "room": null,
+                          "recorded": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "share/docs/api.md",
+          "anchor": "GET /api/courses/{id}/yanhekt/sessions",
+          "level": "source"
+        },
+        "x-response-fields": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID",
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {}
+  },
+  "x-checked-at": "2026-10-28",
+  "x-sources": {
+    "refine": {
+      "repository": "https://github.com/1whoarei1/yanhe-refine",
+      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+      "implementationVersion": "0.10.0"
+    },
+    "yanhekit": {
+      "repository": "https://github.com/windlandneko/yanhekit",
+      "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
+      "license": "AGPL-3.0",
+      "client": "skills/yanhekit/scripts/client.py"
+    },
+    "autoslides": {
+      "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+      "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+      "license": "Apache-2.0",
+      "apiDocument": "share/docs/api.md"
+    }
+  }
+}

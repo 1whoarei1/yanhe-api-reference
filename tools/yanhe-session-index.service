@@ -1,0 +1,22 @@
+[Unit]
+Description=Yanhekt session metadata collection and plaintext export
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.local/share/yanhe-session-index
+ExecStart=/usr/bin/python3 %h/.local/share/yanhe-session-index/runner.py run
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+Restart=on-failure
+RestartSec=60
+TimeoutStopSec=45
+KillMode=mixed
+Nice=10
+NoNewPrivileges=true
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

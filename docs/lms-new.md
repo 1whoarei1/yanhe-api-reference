@@ -8,6 +8,8 @@
 
 `GET /api/my-courses` 消费 `courses[]` 或 `data.courses[]`，课程字段包括 `id/name/course_code/academic_year/semester/department`。
 
+`academic_year` 和 `semester` 可能为对象：学年优先读取 `name/start_year/end_year`，学期优先读取 `name/semester_index`。不得直接转字符串，否则会显示 `[object Object]`。无法识别的学期保留课程但不生成筛选选项，时间筛选统一使用已解析学期。
+
 `GET /course/{courseId}/content` 返回 HTML，参考客户端从 `id="userId"` 的元素读取 `data-id`。本人提交记录的 student ID 来源于该会话，不接收调用者任意指定的学生编号。
 
 ## 课程活动、资料与作业

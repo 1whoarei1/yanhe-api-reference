@@ -5,3 +5,5 @@ private/
 *.har
 .env
 .env.*
+__pycache__/
+*.pyc

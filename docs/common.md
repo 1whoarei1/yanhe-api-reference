@@ -19,7 +19,10 @@
 | 新版 `sub_id` | 一次课次，可能是直播安排或已生成回放 | 只有课程编号不能直接替代课次编号 |
 | `tenant_id` / `tenant_code` | 租户标识，北理工观察值为 `21` | 其它租户应读取当前用户信息，不能全局写死 `21` |
 | `zhiyuan_id` | 新版详情中指向新乐学的课程关联值 | 为空或 `0` 不代表同名课程可以自动关联 |
-| 旧站 course / session / video / live ID | 四种不同实体 | `/live/…` 后的编号不是 course ID；同一 session 可以有多个 video |
+| 旧站 `course_id` | 课程 / 教学班 | `/course/71990` 与 `/session/71990` 是不同对象 |
+| 旧站 `session_id` | 回放目标课次 | 先解析它所属的课程，不能用同号 course 替代；保存回放目标要保留 session |
+| 旧站 `video_id` | 一个 session 内的视频片段 | 同一 session 可以有多个 video；字幕接口用 video 编号 |
+| 旧站 live ID | 直播安排 | `/live/…` 后的编号不是 course ID，也不能因为存在关联 session 就自动改为回放 |
 | 新乐学 `activityId` | 资料或作业活动 | `course_id` 与活动编号不是同一个值 |
 | 新乐学 `uploadId` / `reference_id` | 文件实体 / 文件引用 | 下载引用、上传文件和提交记录编号不可互换 |
 | Moodle module ID | 课程页面 `module-…` 及模块 URL 中的 `id` | 不是课程编号，也不是 `pluginfile.php` 的 context ID |

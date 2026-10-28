@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧乐学 Moodle",
-    "version": "0.1.0",
-    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.2.0",
+    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -47,7 +47,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lexue-reader.js",
           "anchor": "'/my/'",
           "level": "source"
@@ -120,7 +120,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lexue-reader.js",
           "anchor": "/lib/ajax/service.php?",
           "level": "source"
@@ -192,7 +192,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lexue-reader.js",
           "anchor": "/course/view.php?id=",
           "level": "source"
@@ -253,7 +253,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lexue-core.js",
           "anchor": "/mod/${type}/view.php",
           "level": "source"
@@ -318,7 +318,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lexue-core.js",
           "anchor": "/pluginfile",
           "level": "source"
@@ -337,18 +337,24 @@
       }
     }
   },
-  "x-checked-at": "2026-10-27",
+  "x-checked-at": "2026-10-28",
   "x-sources": {
     "refine": {
       "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
-      "implementationVersion": "0.9.3"
+      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+      "implementationVersion": "0.10.0"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",
       "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
       "license": "AGPL-3.0",
       "client": "skills/yanhekit/scripts/client.py"
+    },
+    "autoslides": {
+      "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+      "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+      "license": "Apache-2.0",
+      "apiDocument": "share/docs/api.md"
     }
   }
 }

@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 新乐学",
-    "version": "0.1.0",
-    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.2.0",
+    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -60,7 +60,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/my-courses",
           "level": "source"
@@ -105,7 +105,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/course/${numeric(courseId)}/content",
           "level": "source"
@@ -148,7 +148,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/course/${courseId}/courseware-activities",
           "level": "source"
@@ -201,7 +201,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/courses/${id}/homework-activities?page=${n}",
           "level": "source"
@@ -244,7 +244,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/course/${id}/homework/submission-status",
           "level": "source"
@@ -305,7 +305,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/resources",
           "level": "source"
@@ -348,7 +348,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}`",
           "level": "source"
@@ -391,7 +391,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/group-sets/${numeric(detail.groupSetId)}/group",
           "level": "source"
@@ -465,7 +465,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/students/${userId}/submission_list",
           "level": "source"
@@ -517,7 +517,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/groups/${numeric(group.id)}/submission_list",
           "level": "source"
@@ -563,7 +563,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-core.js",
           "anchor": "/api/uploads/reference/${ref}/blob",
           "level": "source"
@@ -609,7 +609,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-core.js",
           "anchor": "/api/uploads/${id}/blob",
           "level": "source"
@@ -666,7 +666,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-core.js",
           "anchor": "/zip/uploads?timezone=-480&upload_ids=${file.id}",
           "level": "source"
@@ -721,7 +721,7 @@
         "x-effect": "write",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-writer.js",
           "anchor": "'/api/uploads'",
           "level": "source"
@@ -816,7 +816,7 @@
         "x-effect": "write",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-writer.js",
           "anchor": "/upload/file/${numeric(info.id)}",
           "level": "source"
@@ -894,7 +894,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-writer.js",
           "anchor": "/api/uploads/${uploadId}",
           "level": "source"
@@ -946,7 +946,7 @@
         "x-effect": "write",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-writer.js",
           "anchor": "/internal-api/upload/callback/${uploadId}",
           "level": "source"
@@ -1032,7 +1032,7 @@
         "x-effect": "write",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/lms-writer.js",
           "anchor": "/api/course/activities/${id}/submissions",
           "level": "source"
@@ -1107,18 +1107,24 @@
       }
     }
   },
-  "x-checked-at": "2026-10-27",
+  "x-checked-at": "2026-10-28",
   "x-sources": {
     "refine": {
       "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
-      "implementationVersion": "0.9.3"
+      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+      "implementationVersion": "0.10.0"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",
       "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
       "license": "AGPL-3.0",
       "client": "skills/yanhekit/scripts/client.py"
+    },
+    "autoslides": {
+      "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+      "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+      "license": "Apache-2.0",
+      "apiDocument": "share/docs/api.md"
     }
   }
 }

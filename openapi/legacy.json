@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧版延河课堂",
-    "version": "0.1.0",
-    "description": "社区观察规范。核对日期 2026-10-27；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.2.0",
+    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -84,7 +84,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "/v1/user",
           "level": "source"
@@ -186,7 +186,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/platform-api.js",
           "anchor": "/v2/course/private/list",
           "level": "source"
@@ -198,7 +198,7 @@
       "get": {
         "operationId": "legacy_course",
         "summary": "id：课程编号；with_professor_badges=true",
-        "description": "data.id / name_zh / professors / school_year / semester\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "description": "data.id / name_zh / professors / school_year / semester\n\n课程与课次为独立实体。旧版回放先用 session_id 解析父课程；不可把 /session/{id} 的路径编号直接用于本接口。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "legacy"
         ],
@@ -207,7 +207,7 @@
             "name": "id",
             "in": "query",
             "required": true,
-            "description": "旧站课程编号",
+            "description": "旧站 course 编号；不能传入同号 session / video / live 编号",
             "schema": {
               "type": "string"
             },
@@ -278,7 +278,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "'/v1/course'",
           "level": "source"
@@ -289,8 +289,8 @@
     "/v2/course/session/list": {
       "get": {
         "operationId": "legacy_sessions",
-        "summary": "course_id",
-        "description": "data[]：session.id / started_at / title / videos[]\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "summary": "course_id：从课程实体或 session 归属响应取得的父课程编号",
+        "description": "data[]：session.id / started_at / title / videos[].id / duration / main / room / vga；一个 session 可有多个 video\n\n按目标 session.id 选择课次，按 videos[].id 区分片段；不能把目录行数当成可播放回放总量。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "legacy"
         ],
@@ -299,7 +299,7 @@
             "name": "course_id",
             "in": "query",
             "required": true,
-            "description": "当前系统的课程编号",
+            "description": "旧站父课程编号；不是目标 session 或 video 编号",
             "schema": {
               "type": "string"
             },
@@ -346,7 +346,7 @@
         ],
         "responses": {
           "200": {
-            "description": "data[]：session.id / started_at / title / videos[]",
+            "description": "data[]：session.id / started_at / title / videos[].id / duration / main / room / vga；一个 session 可有多个 video",
             "content": {
               "application/json": {
                 "schema": {},
@@ -382,19 +382,19 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "/v2/course/session/list",
           "level": "source"
         },
-        "x-response-fields": "data[]：session.id / started_at / title / videos[]"
+        "x-response-fields": "data[]：session.id / started_at / title / videos[].id / duration / main / room / vga；一个 session 可有多个 video"
       }
     },
     "/v1/course/session": {
       "get": {
         "operationId": "legacy_session",
-        "summary": "session_id, with_video=true",
-        "description": "data 中的课程及课次编号；用于旧 session 链接解析\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "summary": "session_id：目标课次编号；with_video=true",
+        "description": "data.id / course_id / course.id / title / video_ids；解析 session 的实际父课程，兼容 session.course_id\n\n2026-10-27 对用户指定示例的定点公开元数据核对确认 course 与 session 同号不代表同一课程。with_video=true 的响应观察到 video_ids，后续视频仍从课次列表读取。HTTP/业务码成功不等于媒体可播放；见 docs/legacy.md。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "legacy"
         ],
@@ -403,7 +403,7 @@
             "name": "session_id",
             "in": "query",
             "required": true,
-            "description": "旧站 session 编号",
+            "description": "旧站目标 session 编号；与 course.id 独立，即使数字相同也不能互换",
             "schema": {
               "type": "string"
             },
@@ -413,7 +413,7 @@
             "name": "with_video",
             "in": "query",
             "required": false,
-            "description": "",
+            "description": "请求视频相关元数据；不保证直接返回 videos 或可播放媒体地址",
             "schema": {
               "type": "boolean"
             },
@@ -460,7 +460,127 @@
         ],
         "responses": {
           "200": {
-            "description": "data 中的课程及课次编号；用于旧 session 链接解析",
+            "description": "data.id / course_id / course.id / title / video_ids；解析 session 的实际父课程，兼容 session.course_id",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "data": {
+                        "id": 400001,
+                        "course_id": 10001,
+                        "title": "示例课次",
+                        "video_ids": [
+                          500001,
+                          500002
+                        ],
+                        "course": {
+                          "id": 10001,
+                          "name_zh": "示例课程"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/1whoarei1/yanhe-refine",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "file": "src/watch/legacy-api.js",
+          "anchor": "'/v1/course/session'",
+          "level": "source"
+        },
+        "x-response-fields": "data.id / course_id / course.id / title / video_ids；解析 session 的实际父课程，兼容 session.course_id"
+      }
+    },
+    "/v2/live/list": {
+      "get": {
+        "operationId": "legacy_live_list",
+        "summary": "source_id：旧站 course ID；page=1, page_size=100",
+        "description": "data.data[] / data[]：id / source_id / course.id / started_at / status / target / target_vga / target_room\n\n参考客户端只保留 course.id 或 source_id 与目标课程一致的直播，再使用 live.id 读取详情。新旧平台课程 ID 无直接映射。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "tags": [
+          "legacy"
+        ],
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "旧站课程编号；course_id 参数不能替代"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "从 1 起的页码"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "参考实现每页 100 条，非已确认平台上限"
+          },
+          {
+            "name": "Xdomain-Client",
+            "in": "header",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "example": "web_user"
+          },
+          {
+            "name": "Xclient-Version",
+            "in": "header",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "example": "v1"
+          },
+          {
+            "name": "Xclient-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "当前 Unix 秒",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Xclient-Signature",
+            "in": "header",
+            "required": true,
+            "description": "旧 API 请求签名，见 docs/legacy.md",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "data.data[] / data[]：id / source_id / course.id / started_at / status / target / target_vga / target_room",
             "content": {
               "application/json": {
                 "schema": {}
@@ -474,12 +594,12 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
-          "anchor": "'/v1/course/session'",
+          "anchor": "'/v2/live/list'",
           "level": "source"
         },
-        "x-response-fields": "data 中的课程及课次编号；用于旧 session 链接解析"
+        "x-response-fields": "data.data[] / data[]：id / source_id / course.id / started_at / status / target / target_vga / target_room"
       }
     },
     "/v1/live": {
@@ -576,7 +696,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "'/v1/live'",
           "level": "source"
@@ -657,7 +777,7 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "/v1/auth/video/token",
           "level": "source"
@@ -739,12 +859,73 @@
         "x-effect": "read",
         "x-evidence": {
           "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
+          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
           "file": "src/watch/legacy-api.js",
           "anchor": "/v1/video/subtitle/list",
           "level": "source"
         },
         "x-response-fields": "data[]：language / url / src；再读取选中的 VTT/SRT 文件"
+      }
+    },
+    "/v1/video": {
+      "get": {
+        "operationId": "legacy_video",
+        "summary": "id 是经过 session.video_ids 验证的视频片段 ID",
+        "description": "code=0；data.id/main/vga/room/audio/duration；course_id/session_id 可能为 0，不作为归属依据",
+        "tags": [
+          "legacy"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "视频片段 ID，必须属于所选 session",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "code=0；data.id/main/vga/room/audio/duration；course_id/session_id 可能为 0，不作为归属依据",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "synthetic": {
+                    "summary": "合成结构示例，不是真实抓包",
+                    "value": {
+                      "code": 0,
+                      "data": {
+                        "id": 500001,
+                        "course_id": 0,
+                        "session_id": 0,
+                        "main": null,
+                        "vga": null,
+                        "room": null,
+                        "audio": null,
+                        "duration": 100
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+          "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+          "file": "indexer/src/yanhekt.ts",
+          "anchor": "/v1/video?id=",
+          "level": "source"
+        },
+        "x-response-fields": "code=0；data.id/main/vga/room/audio/duration；course_id/session_id 可能为 0，不作为归属依据"
       }
     }
   },
@@ -757,18 +938,24 @@
       }
     }
   },
-  "x-checked-at": "2026-10-27",
+  "x-checked-at": "2026-10-28",
   "x-sources": {
     "refine": {
       "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "8a292f47d7f25a697d01c9bd7c69189ce2edbf5a",
-      "implementationVersion": "0.9.3"
+      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+      "implementationVersion": "0.10.0"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",
       "revision": "cb270ee0aa037400bc7d92bbb518392b804d6513",
       "license": "AGPL-3.0",
       "client": "skills/yanhekit/scripts/client.py"
+    },
+    "autoslides": {
+      "repository": "https://github.com/bit-admin/Yanhekt-AutoSlides",
+      "revision": "746cd87ccc4da59cb838adc023200531aa379a85",
+      "license": "Apache-2.0",
+      "apiDocument": "share/docs/api.md"
     }
   }
 }

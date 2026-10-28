@@ -1,14 +1,19 @@
 {
   "name": "yanhe-api-reference",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Community reference for Yanhekt and BIT learning platform HTTP interfaces.",
-  "repository": {"type": "git", "url": "git+https://github.com/1whoarei1/yanhe-api-reference.git"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1whoarei1/yanhe-api-reference.git"
+  },
   "license": "MIT",
   "scripts": {
     "docs:generate": "node tools/api-docs.mjs --write",
     "docs:check": "node tools/api-docs.mjs"
   },
-  "engines": {"node": ">=20"}
+  "engines": {
+    "node": ">=20"
+  }
 }
