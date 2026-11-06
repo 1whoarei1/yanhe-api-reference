@@ -68,12 +68,10 @@ systemctl --user stop yanhe-session-index.service
 
 原始修改文件保存在 `source/upstream/`；本地补丁在 `source/local/session-index-concurrency.py`，修改标识为 `bounded-concurrency-v1`。
 
-## 插件正式发布与快照测试
+## 插件目录与快照
 
-Refine 0.10.0 / Replay 0.5.0 的正式 ZIP 均提供 `课程目录/课程目录.json` 与 `课程目录/旧版课次目录.json`，通过插件界面分别导入。数据仅作为 Release 资产，留在本地忽略路径，不提交 Git；旧版 XLSX 表不包含。
+Refine 1.10.2 / Replay 0.6.0 默认使用包内的新版课程目录与旧版课次目录，也支持手动导入更新文件。公开快照保存在本地忽略路径，并随插件 Release 分发。
 
-本次快照生成于 `2026-10-28T10:10:33Z`，包含 **14,435 门课程、132,050 个 session**，SHA-256 `5b8ad0082b96d49a22931a9a78d66bd34e504b1bdc454fab78d1e5a63c78288d`。`partial: true` 明确标记仍在采集。正式包不默认把快照注入运行时，用户导入后在 IndexedDB 持久化并优先使用；开发者仍可显式构建带 `legacy-session-index.json` 的本地包。
+当前旧版快照生成于 `2026-10-30T20:19:48Z`，包含 **59,602 门课程、853,644 个 session**。扫描范围为 `1–1,000,000`，`partial: false` 表示该范围已完成。范围以外的课次不作覆盖承诺。
 
-两插件按快照的 course→session 明确关系检索和每页 40 门分页；早期课程保留。课次列表允许不连续，点击时按 session ID 向原站解析视频。内部 `indexSource=autoslides` 为兼容标记，导入的数据来源为 `self-collected`。
-
-隔离浏览器使用实际两份发布目录，验证导入、刷新恢复、不连续 session 归属与无需上游索引的查询。学校响应为合成夹具，没有执行真实媒体播放或下载。早期 7,508 门 / 48,931 个 session 的本地快照测试记录不作为本次发布数量。数据格式见 [目录数据](catalogs.md)。
+课程按明确的 course→session 关系归组，支持不连续课次。播放时读取所选 session 的实际视频。较新的手动目录会保留，较旧目录不会覆盖当前目录。数据格式见 [目录数据](catalogs.md)。

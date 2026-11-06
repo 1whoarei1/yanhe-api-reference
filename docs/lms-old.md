@@ -59,4 +59,4 @@ Content-Type: application/json
 
 这份资料覆盖本人课程、模块内容、说明附件及可读取的本人状态。尚未整理 Moodle 原生文件草稿区、repository 文件选择器、编辑提交和最终确认的完整写入协议。不要因为新乐学已经支持上传，就把它的 payload 发到 Moodle。
 
-来源：[LexueReader](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/lexue-reader.js)、[lexue-core](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/lexue-core.js)。参考解析器不执行抓取页面中的脚本；需要展示富文本的客户端应另做内容清理。
+来源：[LexueReader](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/lexue-reader.js)、[lexue-core](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/lexue-core.js)。参考解析器不执行抓取页面中的脚本；需要展示富文本的客户端应另做内容清理。

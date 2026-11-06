@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-28",
+  "checkedAt": "2026-11-06",
   "systems": {
     "modern": {
       "name": "新版延河课堂",
@@ -324,8 +324,8 @@
       "path": "/courseapi/v2/course-live/get-my-course-day",
       "effect": "read",
       "request": "day：YYYY-MM-DD",
-      "response": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status",
-      "source": "src/platform-api.js",
+      "response": "list.*.course[]：course_id / sub_id / title / realname / term_name / course_begin / course_over / room_name / sub_type / sub_status",
+      "source": "src/watch/api.js",
       "anchor": "/courseapi/v2/course-live/get-my-course-day",
       "sourceProject": "refine",
       "parameters": [
@@ -386,7 +386,7 @@
       "path": "/courseapi/v3/portal-home-setting/get-sub-info",
       "effect": "read",
       "request": "course_id, sub_id",
-      "response": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+      "response": "data.course_id / sub_id / start_at / end_at / duration / video_list；直播为 sub_type / sub_status / live_url，媒体 /play/ 与 /live/ 均签名",
       "source": "src/watch/api.js",
       "anchor": "/courseapi/v3/portal-home-setting/get-sub-info",
       "upstream": "Yanhekt.lecture",
@@ -814,23 +814,49 @@
       "id": "legacy.sessions",
       "system": "legacy",
       "method": "GET",
-      "path": "/v2/course/session/list",
+      "path": "/v1/course/session/list",
       "effect": "read",
-      "request": "course_id：从课程实体或 session 归属响应取得的父课程编号",
-      "response": "data[]：session.id / started_at / title / videos[].id / duration / main / room / vga；一个 session 可有多个 video",
+      "request": "course_id, order_type=asc, page, page_size；优先读取 v1 课次内嵌 videos",
+      "response": "data.data[] 或 data[]：id / course_id / number / started_at / videos；videos 可为数组或单个对象，含 id/main/vga/room/duration",
       "source": "src/watch/legacy-api.js",
-      "anchor": "/v2/course/session/list",
+      "anchor": "/v1/course/session/list",
       "sourceProject": "refine",
       "parameters": [
         {
           "name": "course_id",
           "in": "query",
           "required": true,
-          "description": "旧站父课程编号；不是目标 session 或 video 编号",
           "schema": {
             "type": "string"
           },
           "example": "10001"
+        },
+        {
+          "name": "order_type",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "example": "asc"
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "page_size",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "example": 100
         },
         {
           "name": "Xdomain-Client",
@@ -989,8 +1015,8 @@
       "method": "GET",
       "path": "/v2/live/list",
       "effect": "read",
-      "request": "source_id：旧站 course ID；page=1, page_size=100",
-      "response": "data.data[] / data[]：id / source_id / course.id / started_at / status / target / target_vga / target_room",
+      "request": "source_id 指定课程；user_relationship_type=1 读取当前账号的我的直播；page, page_size",
+      "response": "data.data[]：id / source_id / course.name_zh / course.professors / status / schedule_started_at / schedule_ended_at / location / target / target_vga / target_room",
       "source": "src/watch/legacy-api.js",
       "anchor": "'/v2/live/list'",
       "sourceProject": "refine",
@@ -998,11 +1024,20 @@
         {
           "name": "source_id",
           "in": "query",
-          "required": true,
+          "required": false,
           "schema": {
             "type": "string"
           },
-          "description": "旧站课程编号；course_id 参数不能替代"
+          "example": "10001"
+        },
+        {
+          "name": "user_relationship_type",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
         },
         {
           "name": "page",
@@ -1011,7 +1046,7 @@
           "schema": {
             "type": "integer"
           },
-          "description": "从 1 起的页码"
+          "example": 1
         },
         {
           "name": "page_size",
@@ -1020,50 +1055,12 @@
           "schema": {
             "type": "integer"
           },
-          "description": "参考实现每页 100 条，非已确认平台上限"
-        },
-        {
-          "name": "Xdomain-Client",
-          "in": "header",
-          "required": true,
-          "description": "",
-          "schema": {
-            "type": "string"
-          },
-          "example": "web_user"
-        },
-        {
-          "name": "Xclient-Version",
-          "in": "header",
-          "required": true,
-          "description": "",
-          "schema": {
-            "type": "string"
-          },
-          "example": "v1"
-        },
-        {
-          "name": "Xclient-Timestamp",
-          "in": "header",
-          "required": true,
-          "description": "当前 Unix 秒",
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "Xclient-Signature",
-          "in": "header",
-          "required": true,
-          "description": "旧 API 请求签名，见 docs/legacy.md",
-          "schema": {
-            "type": "string"
-          }
+          "example": 100
         }
       ],
       "evidenceLevel": "source",
       "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
-      "note": "参考客户端只保留 course.id 或 source_id 与目标课程一致的直播，再使用 live.id 读取详情。新旧平台课程 ID 无直接映射。"
+      "note": "两种筛选方式分别使用；客户端按返回的 source_id 或 course.id 校验归属。页大小是客户端选择。"
     },
     {
       "id": "legacy.live",
@@ -1923,9 +1920,9 @@
       "path": "/mod/{module}/view.php",
       "effect": "read",
       "request": "id：课程页中实际出现的 module 编号；支持类型见正文",
-      "response": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0",
+      "response": "HTML 或直接附件。优先按真实 href 的模块分类；resource 文件响应根据 Content-Disposition 和最终地址识别附件，不按 HTML 解析。",
       "source": "src/lexue-core.js",
-      "anchor": "/mod/${type}/view.php",
+      "anchor": "/mod/${module}/view.php",
       "sourceProject": "refine",
       "parameters": [
         {
@@ -1997,12 +1994,7 @@
           "2026-2027-1"
         ]
       },
-      "note": "索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
-      "implementation": {
-        "project": "refine",
-        "source": "src/watch/autoslides-index.js",
-        "anchor": "/api/terms"
-      }
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
     },
     {
       "id": "autoslides.search",
@@ -2064,12 +2056,7 @@
           }
         ]
       },
-      "note": "索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
-      "implementation": {
-        "project": "refine",
-        "source": "src/watch/autoslides-index.js",
-        "anchor": "/api/search"
-      }
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
     },
     {
       "id": "autoslides.sessions",
@@ -2092,12 +2079,7 @@
           400002
         ]
       },
-      "note": "索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
-      "implementation": {
-        "project": "refine",
-        "source": "src/watch/autoslides-index.js",
-        "anchor": "/api/courses/"
-      }
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
     },
     {
       "id": "autoslides.course-metadata",
@@ -2126,7 +2108,7 @@
           "teachers": []
         }
       },
-      "note": "索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。"
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
     },
     {
       "id": "autoslides.session-metadata",
@@ -2171,7 +2153,7 @@
           }
         ]
       },
-      "note": "索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。"
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
     },
     {
       "id": "legacy.video",
@@ -2209,19 +2191,85 @@
           "duration": 100
         }
       },
-      "implementation": {
-        "project": "refine",
-        "source": "src/watch/legacy-api.js",
-        "anchor": "this.json('/v1/video'"
-      }
+      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
+    },
+    {
+      "id": "lms.academic-years",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/my-academic-years",
+      "effect": "read",
+      "request": "读取本人可见学年/学期字典，用于解析课程关联编号",
+      "response": "academic_years[]：id/name/sort/is_active",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/my-academic-years",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "fields",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "example": "id,name,sort,is_active"
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "客户端消费的观察字段；示例为合成数据"
+    },
+    {
+      "id": "lms.semesters-all",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/my-semesters-all",
+      "effect": "read",
+      "request": "读取本人可见学年/学期字典，用于解析课程关联编号",
+      "response": "semesters[]：id/name/real_name/academic_year_id/semester_index",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/my-semesters-all",
+      "sourceProject": "refine",
+      "parameters": [],
+      "evidenceLevel": "source",
+      "schemaScope": "客户端消费的观察字段；示例为合成数据"
+    },
+    {
+      "id": "lms.semesters",
+      "system": "lms",
+      "method": "GET",
+      "path": "/api/my-semesters",
+      "effect": "read",
+      "request": "读取本人可见学年/学期字典，用于解析课程关联编号",
+      "response": "semesters[]：按学年编号返回的学期字典",
+      "source": "src/lms-reader.js",
+      "anchor": "/api/my-semesters",
+      "sourceProject": "refine",
+      "parameters": [
+        {
+          "name": "academic_year_ids",
+          "in": "query",
+          "required": true,
+          "description": "当前课程或学年字典的编号，可重复传递",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": "form",
+          "explode": true
+        }
+      ],
+      "evidenceLevel": "source",
+      "schemaScope": "客户端消费的观察字段；示例为合成数据"
     }
   ],
   "title": "延河课堂接口参考",
   "sources": {
     "refine": {
-      "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-      "implementationVersion": "0.10.0"
+      "repository": "https://github.com/bitoolkit/yanhe-refine",
+      "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+      "implementationVersion": "1.10.2"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",

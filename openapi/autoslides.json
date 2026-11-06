@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧版课程索引（AutoSlides）",
-    "version": "0.2.0",
-    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.3.0",
+    "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -20,7 +20,7 @@
       "get": {
         "operationId": "autoslides_terms",
         "summary": "无业务参数",
-        "description": "terms；updatedAt 为毫秒或 null\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "description": "terms；updatedAt 为毫秒或 null\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
         "tags": [
           "autoslides"
         ],
@@ -65,7 +65,7 @@
       "get": {
         "operationId": "autoslides_search",
         "summary": "q；课程名 / 教师需 term，课程 ID / 教务编号可不指定",
-        "description": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "description": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
         "tags": [
           "autoslides"
         ],
@@ -150,7 +150,7 @@
       "get": {
         "operationId": "autoslides_sessions",
         "summary": "id 是 course ID",
-        "description": "course；sessions 为独立的 session ID 数组\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "description": "course；sessions 为独立的 session ID 数组\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
         "tags": [
           "autoslides"
         ],
@@ -206,7 +206,7 @@
       "get": {
         "operationId": "autoslides_course_metadata",
         "summary": "id 是已索引 course ID；缓存 6 小时",
-        "description": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "description": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
         "tags": [
           "autoslides"
         ],
@@ -268,7 +268,7 @@
       "get": {
         "operationId": "autoslides_session_metadata",
         "summary": "id 是 course ID；from 为偏移；每次 30 条，按 next 翻页",
-        "description": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID\n\n索引尚未完整；403 HTML 不是空结果；本环境未通过线上读取验收。详见 docs/autoslides.md。",
+        "description": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
         "tags": [
           "autoslides"
         ],
@@ -345,12 +345,12 @@
   "components": {
     "securitySchemes": {}
   },
-  "x-checked-at": "2026-10-28",
+  "x-checked-at": "2026-11-06",
   "x-sources": {
     "refine": {
-      "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-      "implementationVersion": "0.10.0"
+      "repository": "https://github.com/bitoolkit/yanhe-refine",
+      "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+      "implementationVersion": "1.10.2"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",

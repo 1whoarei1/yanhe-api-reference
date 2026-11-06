@@ -99,3 +99,13 @@ GET /courseapi/v3/portal-home-setting/get-sub-info?course_id=10001&sub_id=200001
 4. 使用 `GET /spidermaterial/spider-material/web/download/dlUrl?ids=<资源编号>`，读取 `state=200` 的 `data` 字符串下载地址。
 
 不要把资料行 `id` 直接当作下载资源 ID，也不要从文件名猜下载 URL。这个接口与新乐学 `/api/uploads/…` 是两套资源系统。
+
+## 新旧站直播自动关联
+
+1. 新站读取 `/courseapi/v2/course-live/get-my-course-day?day=YYYY-MM-DD`，日期使用北京时间。筛选 `sub_type=course_live`、`sub_status=1` 的课次。
+2. 旧站读取 `/v2/live/list?user_relationship_type=1`，从 `source_id` 与直播 `id` 获取当前账号的课程及直播。
+3. 核对课程名称、教师、学期与上课时间。使用各站实际返回的课次编号，分别保存两站课程和课次引用。
+4. 两站媒体可能使用不同域名，但 `/live/<32位十六进制通道标识>.m3u8` 或 `.flv` 的通道标识相同。忽略签名 query，优先采用同源通道证据。
+5. 无可比通道时，以已知教师及起止时间匹配。候选超过一个时保留显式选择。切换前重新查询对应课次并确认正在直播。
+
+15 分钟时间容差、候选数量限制及目录兜底属于参考客户端的匹配策略。播放器只保存课程对应关系，每次切换重新准备媒体地址。代码见固定基线的 `live-match.js` 与 `live-links.js`。

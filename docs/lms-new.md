@@ -10,6 +10,10 @@
 
 `academic_year` 和 `semester` 可能为对象：学年优先读取 `name/start_year/end_year`，学期优先读取 `name/semester_index`。不得直接转字符串，否则会显示 `[object Object]`。无法识别的学期保留课程但不生成筛选选项，时间筛选统一使用已解析学期。
 
+学年、学期也可能仅返回关联编号。此时读取 `/api/my-academic-years?fields=id,name,sort,is_active` 和 `/api/my-semesters-all` 获取字典，学期列表缺失时使用 `/api/my-semesters?academic_year_ids=…`。关联编号按字典的 `id` 匹配；名称如 `2026-20271季学期` 归一为 `2026-2027-1`。
+
+截止时间优先采用带完整年份的 `end_time` 等时间字段。显示名称中的月日用课程学期的跨年范围补齐，例如秋季学期的次年 1 月截止日期。
+
 `GET /course/{courseId}/content` 返回 HTML，参考客户端从 `id="userId"` 的元素读取 `data-id`。本人提交记录的 student ID 来源于该会话，不接收调用者任意指定的学生编号。
 
 ## 课程活动、资料与作业

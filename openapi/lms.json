@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 新乐学",
-    "version": "0.2.0",
-    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.3.0",
+    "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -59,8 +59,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/my-courses",
           "level": "source"
@@ -104,8 +104,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/course/${numeric(courseId)}/content",
           "level": "source"
@@ -147,8 +147,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/course/${courseId}/courseware-activities",
           "level": "source"
@@ -200,8 +200,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/courses/${id}/homework-activities?page=${n}",
           "level": "source"
@@ -243,8 +243,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/course/${id}/homework/submission-status",
           "level": "source"
@@ -304,8 +304,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/resources",
           "level": "source"
@@ -347,8 +347,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}`",
           "level": "source"
@@ -390,8 +390,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/group-sets/${numeric(detail.groupSetId)}/group",
           "level": "source"
@@ -464,8 +464,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/students/${userId}/submission_list",
           "level": "source"
@@ -516,8 +516,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-reader.js",
           "anchor": "/api/activities/${id}/groups/${numeric(group.id)}/submission_list",
           "level": "source"
@@ -562,8 +562,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-core.js",
           "anchor": "/api/uploads/reference/${ref}/blob",
           "level": "source"
@@ -608,8 +608,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-core.js",
           "anchor": "/api/uploads/${id}/blob",
           "level": "source"
@@ -665,8 +665,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-core.js",
           "anchor": "/zip/uploads?timezone=-480&upload_ids=${file.id}",
           "level": "source"
@@ -720,8 +720,8 @@
         },
         "x-effect": "write",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-writer.js",
           "anchor": "'/api/uploads'",
           "level": "source"
@@ -815,8 +815,8 @@
         },
         "x-effect": "write",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-writer.js",
           "anchor": "/upload/file/${numeric(info.id)}",
           "level": "source"
@@ -893,8 +893,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-writer.js",
           "anchor": "/api/uploads/${uploadId}",
           "level": "source"
@@ -945,8 +945,8 @@
         },
         "x-effect": "write",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-writer.js",
           "anchor": "/internal-api/upload/callback/${uploadId}",
           "level": "source"
@@ -1031,8 +1031,8 @@
         },
         "x-effect": "write",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lms-writer.js",
           "anchor": "/api/course/activities/${id}/submissions",
           "level": "source"
@@ -1095,6 +1095,130 @@
           }
         }
       }
+    },
+    "/api/my-academic-years": {
+      "get": {
+        "operationId": "lms_academic_years",
+        "summary": "读取本人可见学年/学期字典，用于解析课程关联编号",
+        "description": "academic_years[]：id/name/sort/is_active\n\n客户端消费的观察字段；示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "id,name,sort,is_active"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "academic_years[]：id/name/sort/is_active",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/my-academic-years",
+          "level": "source"
+        },
+        "x-response-fields": "academic_years[]：id/name/sort/is_active"
+      }
+    },
+    "/api/my-semesters-all": {
+      "get": {
+        "operationId": "lms_semesters_all",
+        "summary": "读取本人可见学年/学期字典，用于解析课程关联编号",
+        "description": "semesters[]：id/name/real_name/academic_year_id/semester_index\n\n客户端消费的观察字段；示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "semesters[]：id/name/real_name/academic_year_id/semester_index",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/my-semesters-all",
+          "level": "source"
+        },
+        "x-response-fields": "semesters[]：id/name/real_name/academic_year_id/semester_index"
+      }
+    },
+    "/api/my-semesters": {
+      "get": {
+        "operationId": "lms_semesters",
+        "summary": "读取本人可见学年/学期字典，用于解析课程关联编号",
+        "description": "semesters[]：按学年编号返回的学期字典\n\n客户端消费的观察字段；示例为合成数据",
+        "tags": [
+          "lms"
+        ],
+        "parameters": [
+          {
+            "name": "academic_year_ids",
+            "in": "query",
+            "required": true,
+            "description": "当前课程或学年字典的编号，可重复传递",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "semesters[]：按学年编号返回的学期字典",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "未完整枚举的 HTTP / 业务错误、登录页或资源不可用；按正文处理，不自动重试写请求。"
+          }
+        },
+        "x-effect": "read",
+        "x-evidence": {
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+          "file": "src/lms-reader.js",
+          "anchor": "/api/my-semesters",
+          "level": "source"
+        },
+        "x-response-fields": "semesters[]：按学年编号返回的学期字典"
+      }
     }
   },
   "components": {
@@ -1107,12 +1231,12 @@
       }
     }
   },
-  "x-checked-at": "2026-10-28",
+  "x-checked-at": "2026-11-06",
   "x-sources": {
     "refine": {
-      "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-      "implementationVersion": "0.10.0"
+      "repository": "https://github.com/bitoolkit/yanhe-refine",
+      "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+      "implementationVersion": "1.10.2"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",

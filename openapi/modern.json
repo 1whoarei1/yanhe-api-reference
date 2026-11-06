@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 新版延河课堂",
-    "version": "0.2.0",
-    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.3.0",
+    "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -44,8 +44,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/watch/api.js",
           "anchor": "/userapi/v1/infosimple",
           "level": "source"
@@ -130,8 +130,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/vlabpassportapi/v1/account-profile/course",
           "level": "source"
@@ -180,8 +180,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/vlabpassportapi/v1/course/term-list",
           "level": "source"
@@ -230,8 +230,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/vlabpassportapi/v1/user/structures",
           "level": "source"
@@ -363,8 +363,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/courseapi/v3/multi-search/get-course-list",
           "level": "source"
@@ -433,8 +433,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/watch/api.js",
           "anchor": "/courseapi/v3/multi-search/get-course-detail",
           "level": "source"
@@ -447,7 +447,7 @@
       "get": {
         "operationId": "modern_today",
         "summary": "day：YYYY-MM-DD",
-        "description": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "description": "list.*.course[]：course_id / sub_id / title / realname / term_name / course_begin / course_over / room_name / sub_type / sub_status\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "modern"
         ],
@@ -465,7 +465,7 @@
         ],
         "responses": {
           "200": {
-            "description": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status",
+            "description": "list.*.course[]：course_id / sub_id / title / realname / term_name / course_begin / course_over / room_name / sub_type / sub_status",
             "content": {
               "application/json": {
                 "schema": {}
@@ -478,13 +478,13 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-          "file": "src/platform-api.js",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+          "file": "src/watch/api.js",
           "anchor": "/courseapi/v2/course-live/get-my-course-day",
           "level": "source"
         },
-        "x-response-fields": "list.*.course[]：course_id / sub_id / course_begin / course_over / room_name / sub_status"
+        "x-response-fields": "list.*.course[]：course_id / sub_id / title / realname / term_name / course_begin / course_over / room_name / sub_type / sub_status"
       }
     },
     "/courseapi/v3/multi-search/get-course-teacher-others": {
@@ -532,8 +532,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/courseapi/v3/multi-search/get-course-teacher-others",
           "level": "source"
@@ -545,7 +545,7 @@
       "get": {
         "operationId": "modern_lecture",
         "summary": "course_id, sub_id",
-        "description": "data.duration / video_list；直播为 sub_type / sub_status / live_url\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "description": "data.course_id / sub_id / start_at / end_at / duration / video_list；直播为 sub_type / sub_status / live_url，媒体 /play/ 与 /live/ 均签名\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "modern"
         ],
@@ -573,7 +573,7 @@
         ],
         "responses": {
           "200": {
-            "description": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+            "description": "data.course_id / sub_id / start_at / end_at / duration / video_list；直播为 sub_type / sub_status / live_url，媒体 /play/ 与 /live/ 均签名",
             "content": {
               "application/json": {
                 "schema": {},
@@ -604,13 +604,13 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/watch/api.js",
           "anchor": "/courseapi/v3/portal-home-setting/get-sub-info",
           "level": "source"
         },
-        "x-response-fields": "data.duration / video_list；直播为 sub_type / sub_status / live_url",
+        "x-response-fields": "data.course_id / sub_id / start_at / end_at / duration / video_list；直播为 sub_type / sub_status / live_url，媒体 /play/ 与 /live/ 均签名",
         "x-upstream-method": "Yanhekt.lecture"
       }
     },
@@ -687,8 +687,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/watch/api.js",
           "anchor": "/coursesourceapi/course/study-auth/${courseId}/${subId}",
           "level": "source"
@@ -760,8 +760,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/watch/api.js",
           "anchor": "/courseapi/v3/web-socket/search-trans-result",
           "level": "source"
@@ -825,8 +825,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/courseapi/v3/course-share-resource/get-course-resource",
           "level": "source"
@@ -878,8 +878,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/platform-api.js",
           "anchor": "/spidermaterial/spider-material/web/download/dlUrl",
           "level": "source"
@@ -897,12 +897,12 @@
       }
     }
   },
-  "x-checked-at": "2026-10-28",
+  "x-checked-at": "2026-11-06",
   "x-sources": {
     "refine": {
-      "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-      "implementationVersion": "0.10.0"
+      "repository": "https://github.com/bitoolkit/yanhe-refine",
+      "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+      "implementationVersion": "1.10.2"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",

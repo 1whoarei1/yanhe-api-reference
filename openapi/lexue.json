@@ -2,8 +2,8 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧乐学 Moodle",
-    "version": "0.2.0",
-    "description": "社区观察规范。核对日期 2026-10-28；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
+    "version": "0.3.0",
+    "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
       "identifier": "MIT"
@@ -46,8 +46,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lexue-reader.js",
           "anchor": "'/my/'",
           "level": "source"
@@ -119,8 +119,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lexue-reader.js",
           "anchor": "/lib/ajax/service.php?",
           "level": "source"
@@ -191,8 +191,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lexue-reader.js",
           "anchor": "/course/view.php?id=",
           "level": "source"
@@ -204,7 +204,7 @@
       "get": {
         "operationId": "lexue_module",
         "summary": "id：课程页中实际出现的 module 编号；支持类型见正文",
-        "description": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0\n\nmodule 占位只描述已观察模块族；URL 活动仅保留入口，不保证抓取外部目标。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
+        "description": "HTML 或直接附件。优先按真实 href 的模块分类；resource 文件响应根据 Content-Disposition 和最终地址识别附件，不按 HTML 解析。\n\nmodule 占位只描述已观察模块族；URL 活动仅保留入口，不保证抓取外部目标。\n\n参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据",
         "tags": [
           "lexue"
         ],
@@ -231,7 +231,7 @@
         ],
         "responses": {
           "200": {
-            "description": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0",
+            "description": "HTML 或直接附件。优先按真实 href 的模块分类；resource 文件响应根据 Content-Disposition 和最终地址识别附件，不按 HTML 解析。",
             "content": {
               "text/html": {
                 "schema": {
@@ -252,13 +252,13 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lexue-core.js",
-          "anchor": "/mod/${type}/view.php",
+          "anchor": "/mod/${module}/view.php",
           "level": "source"
         },
-        "x-response-fields": "HTML，或 resource 模块的文件重定向；首次探测资源使用 Range: bytes=0-0"
+        "x-response-fields": "HTML 或直接附件。优先按真实 href 的模块分类；resource 文件响应根据 Content-Disposition 和最终地址识别附件，不按 HTML 解析。"
       }
     },
     "/pluginfile.php/{contextId}/{filePath}": {
@@ -317,8 +317,8 @@
         },
         "x-effect": "read",
         "x-evidence": {
-          "repository": "https://github.com/1whoarei1/yanhe-refine",
-          "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
+          "repository": "https://github.com/bitoolkit/yanhe-refine",
+          "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
           "file": "src/lexue-core.js",
           "anchor": "/pluginfile",
           "level": "source"
@@ -337,12 +337,12 @@
       }
     }
   },
-  "x-checked-at": "2026-10-28",
+  "x-checked-at": "2026-11-06",
   "x-sources": {
     "refine": {
-      "repository": "https://github.com/1whoarei1/yanhe-refine",
-      "revision": "32bdf8cd999fa3f9343b639ec46d6f1ff7241311",
-      "implementationVersion": "0.10.0"
+      "repository": "https://github.com/bitoolkit/yanhe-refine",
+      "revision": "3a767ea71e973ba33e00a7d69b3b076928e401fb",
+      "implementationVersion": "1.10.2"
     },
     "yanhekit": {
       "repository": "https://github.com/windlandneko/yanhekit",

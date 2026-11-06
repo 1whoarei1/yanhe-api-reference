@@ -16,9 +16,9 @@
 
 `video_list` 的对象键不是可靠的机位类型；按每个值的 `type/status` 识别。一个画面缺失或返回 404，不代表另一个画面不可用。文件扩展名和响应 Content-Type / 播放器能力一起判断。
 
-## 新版 `/play/` 地址签名
+## 新版 `/play/` 与 `/live/` 地址签名
 
-参考插件仅对返回 URL 的 pathname 以 `/play/` 开头的地址重建 `t` query。取当前合法登录 profile，按下面的字段顺序计算：
+参考插件对返回 URL 的 pathname 以 `/play/` 或 `/live/` 开头的地址更新 `t` query。取当前合法登录 profile，按下面的字段顺序计算：
 
 ```text
 timestamp = 当前 Unix 秒
@@ -26,11 +26,13 @@ digest = MD5(pathname + userId + tenantId + reverse(phone) + timestamp)
 t = userId + "-" + timestamp + "-" + digest
 ```
 
-参与拼接的数值转换为字符串，不加入分隔符；pathname 保留 URL 本身的路径语义，时间单位不能用毫秒。参考实现将 query 替换为单个 `t` 参数。手机号只用于内存计算，不出现在文档示例、日志或导出数据。
+参与拼接的数值转换为字符串，不加入分隔符；pathname 保留 URL 本身的路径语义，时间单位不能用毫秒。参考实现使用 `url.searchParams.set("t", value)` 更新签名，保留 `host`、`port`、`clientUUID` 等原有参数。手机号只用于内存计算，不出现在文档示例、日志或导出数据。
 
-yanhekit 的 `Yanhekt.sign` 使用同一套字段关系，但当前对传入地址一律重建 query；插件先判断 `/play/`。因此迁移时要区分具体媒体路径，不能让通用网络层对所有 CDN URL 盲目覆盖已有 query。
+yanhekit 的 `Yanhekt.sign` 使用同一套字段关系，但当前对传入地址一律重建 query；插件先判断 `/play/` 或 `/live/`。因此迁移时要区分具体媒体路径，不能让通用网络层对所有 CDN URL 盲目覆盖已有 query。
 
-来源：[插件 signedUrl](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/watch/core.js)、[yanhekit client.py](https://github.com/windlandneko/yanhekit/blob/cb270ee0aa037400bc7d92bbb518392b804d6513/skills/yanhekit/scripts/client.py)。这类计算是在当前会话基础上准备媒体请求，不能代替服务端授权。
+来源：[插件 signedUrl](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/watch/core.js)、[yanhekit client.py](https://github.com/windlandneko/yanhekit/blob/cb270ee0aa037400bc7d92bbb518392b804d6513/skills/yanhekit/scripts/client.py)。这类计算是在当前会话基础上准备媒体请求，不能代替服务端授权。
+
+2026-11-06 的授权会话直播样本中，同一媒体地址缺少 `t` 返回 HTTP 403，补充当前会话的正确签名返回 HTTP 200。此结果覆盖本次样本；游客历史权限及规则变更时间尚无验证记录。
 
 ## 新版直播字段
 
@@ -47,9 +49,9 @@ marker = MD5(CLIENT_KEY + "_200")
 Xclient_Signature = MD5(CLIENT_KEY + "_v1_" + timestamp)
 ```
 
-在文件名前的倒数第二个路径段插入 `marker`，已经存在时不重复插入；query 更新 `Xvideo_Token/Xclient_Timestamp/Xclient_Signature/Xclient_Version/Platform`，其中版本为 `v1`，平台为 `yhkt_user`。其它原有 query 的保留规则与新版替换全部 query 的行为不同。
+在文件名前的倒数第二个路径段插入 `marker`，已经存在时不重复插入；query 更新 `Xvideo_Token/Xclient_Timestamp/Xclient_Signature/Xclient_Version/Platform`，其中版本为 `v1`，平台为 `yhkt_user`。其它原有 query 一并保留。
 
-旧直播返回其它受支持的延河媒体域名时，参考实现保留原地址，不强套 `cvideo/coss` 的改写。上述行为的来源为 [legacy-core](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/watch/legacy-core.js)，旧 API 的请求头签名另见 [旧版接口](legacy.md)。
+旧直播返回其它受支持的延河媒体域名时，参考实现保留原地址，不强套 `cvideo/coss` 的改写。上述行为的来源为 [legacy-core](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/watch/legacy-core.js)，旧 API 的请求头签名另见 [旧版接口](legacy.md)。
 
 ## 媒体请求的层次
 

@@ -6,7 +6,7 @@
 
 `course_id` 表示课程 / 教学班，`session_id` 表示具体课次，`video_id` 表示该课次内的视频片段；它们是独立编号。同一数字出现在不同路径中不能视为同一个对象。
 
-旧版回放的目标是 session。收到 `/session/{sessionId}` 或 `/ReadSession/{sessionId}` 后，使用该 `session_id` 调用 `/v1/course/session`，从响应中解析实际所属的 `course_id`；随后以返回的课程编号查询课次列表，并按目标 session 及 video 选择录像。不要把路径数字直接填入 `/v1/course?id=…`。
+旧版回放的目标是 session。收到 `/session/{sessionId}` 或 `/ReadSession/{sessionId}` 后，先从本地课次目录查询实际所属的 `course_id`，缺少记录时再调用 `/v1/course/session` 解析；随后以返回的课程编号查询课次列表，并按目标 session 及 video 选择录像。不要把路径数字直接填入 `/v1/course?id=…`。
 
 2026-10-27 对用户指定示例的定点公开元数据核对结果：
 
@@ -37,13 +37,13 @@
 
 `CLIENT_KEY = 1138b69dfef641d9d7ba49137d2d4875` 是参考旧网页协议中的公开客户端常量，不是用户 token。API 请求签名中的 `_undefined` 是参考实现的实际行为，不能因为它看起来异常，就未经验证改成时间戳。媒体请求使用另一种签名，见 [媒体与字幕](media.md)。
 
-JSON 通常为 `{ "code": 0, "data": ... }`，非零业务码与 HTTP 错误分别处理。来源：[LegacyYanheApi](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/watch/legacy-api.js)、[legacy-core](https://github.com/1whoarei1/yanhe-refine/blob/8a292f47d7f25a697d01c9bd7c69189ce2edbf5a/src/watch/legacy-core.js)。
+JSON 通常为 `{ "code": 0, "data": ... }`，非零业务码与 HTTP 错误分别处理。来源：[LegacyYanheApi](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/watch/legacy-api.js)、[legacy-core](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/watch/legacy-core.js)。
 
 ## 本人课程与课程详情
 
 `GET /v2/course/private/list?page=1&page_size=100&user_relationship_type=1` 读取 `data.data`、`data.last_page` 和 `data.total`。课程常用 `id/name_zh/professors/school_year/semester`。这条路径是“我的课程”，不是新版的全站搜索。
 
-`GET /v1/course?id=<courseId>&with_professor_badges=true` 读取课程名称、教师及学期。随后 `GET /v2/course/session/list?course_id=<courseId>` 获取课次和视频。
+`GET /v1/course?id=<courseId>&with_professor_badges=true` 读取课程名称、教师及学期。回放优先从 `GET /v1/course/session/list?course_id=<courseId>&order_type=asc&page=1&page_size=100` 获取课次内嵌 `videos`。课程元数据可取自本地目录或 `/v1/course`；部分课程详情过期时，课次列表仍可能提供录像。
 
 合成响应片段：
 
@@ -119,3 +119,9 @@ JSON 通常为 `{ "code": 0, "data": ... }`，非零业务码与 HTTP 错误分�
 ## session 索引与视频元数据
 
 旧版课程搜索与课次发现已接入 [公开在线索引](autoslides.md)。原旧版课程表继续停用。session ID 仍为播放目标，课程 ID 用于查找父课程及索引课次。选择索引课次后读取 `/v1/course/session` 的 `video_ids`，验证所属课程与片段，再通过 `GET /v1/video?id=` 获取所选视频的 `main/vga/room/audio/duration`。该视频对象的 `course_id/session_id` 可能为 0，不作为归属依据。接口失败或空 `video_ids` 分别提示，不将“未收录”解释为“没有回放”。
+
+## 按账号发现当前直播
+
+`GET /v2/live/list?page=1&page_size=100&user_relationship_type=1` 返回当前账号的「我的直播」。`data.data[]` 包含直播 `id`、课程 `source_id`、`course.name_zh`、`course.professors`、`schedule_started_at`、`schedule_ended_at`，以及 `target/target_vga/target_room` 三路媒体。
+
+查询某门课的直播时使用 `source_id`。切换前再通过 `/v1/live?id=…&with_session=true&with_course=true` 确认实际课程归属及直播状态。按账号配对方法见[新版直播关联](modern.md#新旧站直播自动关联)。
