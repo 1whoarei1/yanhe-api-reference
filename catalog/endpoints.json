@@ -21,12 +21,6 @@
       "name": "旧乐学 Moodle",
       "origin": "https://lexue.bit.edu.cn",
       "auth": "浏览器会话 Cookie；AJAX 另带当前 sesskey"
-    },
-    "autoslides": {
-      "name": "旧版课程索引（AutoSlides）",
-      "origin": "https://share.ruc.edu.kg",
-      "auth": "公开元数据，无 Bearer；校园网 / WAF 可能限制访问",
-      "public": true
     }
   },
   "endpoints": [
@@ -1975,187 +1969,6 @@
       "schemaScope": "参考客户端消费或构造的字段；不是服务器完整 schema，示例为合成数据"
     },
     {
-      "id": "autoslides.terms",
-      "system": "autoslides",
-      "method": "GET",
-      "path": "/api/terms",
-      "effect": "read",
-      "request": "无业务参数",
-      "response": "terms；updatedAt 为毫秒或 null",
-      "sourceProject": "autoslides",
-      "source": "share/docs/api.md",
-      "anchor": "GET /api/terms",
-      "evidenceLevel": "source",
-      "security": [],
-      "parameters": [],
-      "responseExample": {
-        "updatedAt": 1793000000000,
-        "terms": [
-          "2026-2027-1"
-        ]
-      },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
-    },
-    {
-      "id": "autoslides.search",
-      "system": "autoslides",
-      "method": "GET",
-      "path": "/api/search",
-      "effect": "read",
-      "request": "q；课程名 / 教师需 term，课程 ID / 教务编号可不指定",
-      "response": "query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量",
-      "sourceProject": "autoslides",
-      "source": "share/docs/api.md",
-      "anchor": "GET /api/search",
-      "evidenceLevel": "source",
-      "security": [],
-      "parameters": [
-        {
-          "name": "q",
-          "in": "query",
-          "required": true,
-          "description": "查询课程；不接受 session URL",
-          "schema": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 64
-          }
-        },
-        {
-          "name": "term",
-          "in": "query",
-          "required": false,
-          "description": "名称或教师搜索必需，恰好一个已索引学期",
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "responseExample": {
-        "query": {
-          "q": "示例课程",
-          "term": "2026-2027-1"
-        },
-        "total": 1,
-        "truncated": false,
-        "results": [
-          {
-            "id": 10001,
-            "name": "示例课程",
-            "number": null,
-            "term": "2026-2027-1",
-            "teachers": [
-              "示例教师"
-            ],
-            "sessionCount": 2,
-            "match": {
-              "fields": [
-                "name"
-              ]
-            }
-          }
-        ]
-      },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
-    },
-    {
-      "id": "autoslides.sessions",
-      "system": "autoslides",
-      "method": "GET",
-      "path": "/api/courses/{id}/sessions",
-      "effect": "read",
-      "request": "id 是 course ID",
-      "response": "course；sessions 为独立的 session ID 数组",
-      "sourceProject": "autoslides",
-      "source": "share/docs/api.md",
-      "anchor": "GET /api/courses/{id}/sessions",
-      "evidenceLevel": "source",
-      "security": [],
-      "parameters": [],
-      "responseExample": {
-        "course": 10001,
-        "sessions": [
-          400001,
-          400002
-        ]
-      },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
-    },
-    {
-      "id": "autoslides.course-metadata",
-      "system": "autoslides",
-      "method": "GET",
-      "path": "/api/courses/{id}/yanhekt",
-      "effect": "read",
-      "request": "id 是已索引 course ID；缓存 6 小时",
-      "response": "course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers",
-      "sourceProject": "autoslides",
-      "source": "share/docs/api.md",
-      "anchor": "GET /api/courses/{id}/yanhekt",
-      "evidenceLevel": "source",
-      "security": [],
-      "parameters": [],
-      "responseExample": {
-        "course": {
-          "id": 10001,
-          "nameZh": "示例课程",
-          "nameEn": null,
-          "code": null,
-          "level": null,
-          "college": null,
-          "collegeEn": null,
-          "image": null,
-          "teachers": []
-        }
-      },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
-    },
-    {
-      "id": "autoslides.session-metadata",
-      "system": "autoslides",
-      "method": "GET",
-      "path": "/api/courses/{id}/yanhekt/sessions",
-      "effect": "read",
-      "request": "id 是 course ID；from 为偏移；每次 30 条，按 next 翻页",
-      "response": "course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID",
-      "sourceProject": "autoslides",
-      "source": "share/docs/api.md",
-      "anchor": "GET /api/courses/{id}/yanhekt/sessions",
-      "evidenceLevel": "source",
-      "security": [],
-      "parameters": [
-        {
-          "name": "from",
-          "in": "query",
-          "required": false,
-          "schema": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-          }
-        }
-      ],
-      "responseExample": {
-        "course": 10001,
-        "total": 1,
-        "from": 0,
-        "next": null,
-        "sessions": [
-          {
-            "id": 400001,
-            "title": "示例课次",
-            "week": 1,
-            "day": 1,
-            "startedAt": null,
-            "endedAt": null,
-            "room": null,
-            "recorded": null
-          }
-        ]
-      },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
-    },
-    {
       "id": "legacy.video",
       "system": "legacy",
       "method": "GET",
@@ -2191,7 +2004,7 @@
           "duration": 100
         }
       },
-      "note": "AutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。"
+      "note": "学校旧站接口的历史协议参考，来源为 AutoSlides 索引器。当前播放器优先读取 /v1/course/session/list 内嵌的 videos。"
     },
     {
       "id": "lms.academic-years",

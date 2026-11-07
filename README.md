@@ -1,23 +1,23 @@
 # 延河课堂接口参考
 
-**0.3.0** · [下载](https://github.com/1whoarei1/yanhe-api-reference/releases/latest) · [更新记录](CHANGELOG.md)
+**0.3.1** · [下载](https://github.com/1whoarei1/yanhe-api-reference/releases/latest) · [更新记录](CHANGELOG.md)
 
 覆盖新旧延河课堂、新旧乐学的课程、直播、回放、字幕、资料与作业接口。提供机器可读清单和 OpenAPI 3.1。
 
-本次更新补齐直播签名、新旧站直播自动配对、旧站 v1 回放，以及新乐学学年学期字典。
+本次移除第三方课程索引网站的接口文档。
 
 ## 文档
 
 - [新版延河课堂](docs/modern.md) · [旧版延河课堂](docs/legacy.md) · [媒体签名与字幕](docs/media.md)
 - [新乐学](docs/lms-new.md) · [旧乐学](docs/lms-old.md)
-- [课程目录](docs/catalogs.md) · [自建索引采集](docs/session-index-server.md) · [历史在线索引协议](docs/autoslides.md)
+- [课程目录](docs/catalogs.md) · [自建索引采集](docs/session-index-server.md) · [索引来源](docs/autoslides.md)
 - [接口清单](catalog/endpoints.json) · [通用约定](docs/common.md) · [验证范围](docs/verification.md)
 
 ## OpenAPI
 
-[新延河](openapi/modern.json) · [旧延河](openapi/legacy.json) · [新乐学](openapi/lms.json) · [旧乐学](openapi/lexue.json) · [历史索引](openapi/autoslides.json)
+[新延河](openapi/modern.json) · [旧延河](openapi/legacy.json) · [新乐学](openapi/lms.json) · [旧乐学](openapi/lexue.json)
 
-共 54 个接口或路径族。源码基线为[延河焕新 1.10.2](https://github.com/bitoolkit/yanhe-refine/tree/v1.10.2)，详细来源及实际验证范围见文档。
+共 49 个接口或路径族。源码基线为[延河焕新 1.10.2](https://github.com/bitoolkit/yanhe-refine/tree/v1.10.2)，详细来源及实际验证范围见文档。
 
 ## 致谢
 
@@ -106,18 +106,6 @@
 | `lexue.course-page` | `GET /course/view.php` | id：本人旧乐学课程编号 | HTML；body.course-{id} 与 .activity 列表 | [源码](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/lexue-reader.js) |
 | `lexue.module` | `GET /mod/{module}/view.php` | id：课程页中实际出现的 module 编号；支持类型见正文 | HTML 或直接附件。优先按真实 href 的模块分类；resource 文件响应根据 Content-Disposition 和最终地址识别附件，不按 HTML 解析。 | [源码](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/lexue-core.js) |
 | `lexue.file` | `GET /pluginfile.php/{contextId}/{filePath}` | 只能使用页面真实附件链接；forcedownload=1 | 文件；由浏览器下载 API 接收，不拼接猜测文件路径 | [源码](https://github.com/bitoolkit/yanhe-refine/blob/3a767ea71e973ba33e00a7d69b3b076928e401fb/src/lexue-core.js) |
-
-### 旧版课程索引（AutoSlides）
-
-基础地址：`https://share.ruc.edu.kg`。会话：公开元数据，无 Bearer；校园网 / WAF 可能限制访问。
-
-| 编号 | 请求 | 参数 / 请求体 | 消费的返回字段 | 来源 |
-| --- | --- | --- | --- | --- |
-| `autoslides.terms` | `GET /api/terms` | 无业务参数 | terms；updatedAt 为毫秒或 null | [源码](https://github.com/bit-admin/Yanhekt-AutoSlides/blob/746cd87ccc4da59cb838adc023200531aa379a85/share/docs/api.md) |
-| `autoslides.search` | `GET /api/search` | q；课程名 / 教师需 term，课程 ID / 教务编号可不指定 | query/total/truncated/results；最多 200 门，无服务端分页；sessionCount 不是视频数量 | [源码](https://github.com/bit-admin/Yanhekt-AutoSlides/blob/746cd87ccc4da59cb838adc023200531aa379a85/share/docs/api.md) |
-| `autoslides.sessions` | `GET /api/courses/{id}/sessions` | id 是 course ID | course；sessions 为独立的 session ID 数组 | [源码](https://github.com/bit-admin/Yanhekt-AutoSlides/blob/746cd87ccc4da59cb838adc023200531aa379a85/share/docs/api.md) |
-| `autoslides.course-metadata` | `GET /api/courses/{id}/yanhekt` | id 是已索引 course ID；缓存 6 小时 | course.id/nameZh/nameEn/code/level/college/collegeEn/image/teachers | [源码](https://github.com/bit-admin/Yanhekt-AutoSlides/blob/746cd87ccc4da59cb838adc023200531aa379a85/share/docs/api.md) |
-| `autoslides.session-metadata` | `GET /api/courses/{id}/yanhekt/sessions` | id 是 course ID；from 为偏移；每次 30 条，按 next 翻页 | course/total/from/next/sessions；id/title/week/day/startedAt/endedAt/room/recorded 可空或单条 error；不含 video ID | [源码](https://github.com/bit-admin/Yanhekt-AutoSlides/blob/746cd87ccc4da59cb838adc023200531aa379a85/share/docs/api.md) |
 
 <!-- api-index:end -->
 

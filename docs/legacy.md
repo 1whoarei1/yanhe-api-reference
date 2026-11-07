@@ -118,7 +118,9 @@ JSON 通常为 `{ "code": 0, "data": ... }`，非零业务码与 HTTP 错误分�
 
 ## session 索引与视频元数据
 
-旧版课程搜索与课次发现已接入 [公开在线索引](autoslides.md)。原旧版课程表继续停用。session ID 仍为播放目标，课程 ID 用于查找父课程及索引课次。选择索引课次后读取 `/v1/course/session` 的 `video_ids`，验证所属课程与片段，再通过 `GET /v1/video?id=` 获取所选视频的 `main/vga/room/audio/duration`。该视频对象的 `course_id/session_id` 可能为 0，不作为归属依据。接口失败或空 `video_ids` 分别提示，不将“未收录”解释为“没有回放”。
+旧版课程搜索使用 [本地课程目录](catalogs.md)，按明确的 course→session 关系发现课次。session ID 是播放目标，course ID 用于读取父课程的课次列表。播放器优先读取 `/v1/course/session/list` 内嵌的 `videos`，验证所选 session 与 video 片段的归属。直接打开 session 链接时优先查本地归属，缺失时通过 `/v1/course/session` 解析父课程。
+
+`GET /v1/video?id=` 保留为学校旧站接口的历史协议参考，来源为 AutoSlides 采集器。其视频对象的 `course_id/session_id` 可能为 0，归属需按已确认的 session 与 video 关系核对。当前播放器使用上述 v1 列表读取视频。
 
 ## 按账号发现当前直播
 

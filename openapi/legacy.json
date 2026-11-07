@@ -2,7 +2,7 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧版延河课堂",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",
@@ -868,7 +868,7 @@
       "get": {
         "operationId": "legacy_video",
         "summary": "id 是经过 session.video_ids 验证的视频片段 ID",
-        "description": "code=0；data.id/main/vga/room/audio/duration；course_id/session_id 可能为 0，不作为归属依据\n\nAutoSlides 固定修订的历史在线协议；当前焕新和 Replay 使用内置或导入的本地目录。",
+        "description": "code=0；data.id/main/vga/room/audio/duration；course_id/session_id 可能为 0，不作为归属依据\n\n学校旧站接口的历史协议参考，来源为 AutoSlides 索引器。当前播放器优先读取 /v1/course/session/list 内嵌的 videos。",
         "tags": [
           "legacy"
         ],

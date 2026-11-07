@@ -2,7 +2,7 @@
   "openapi": "3.1.1",
   "info": {
     "title": "延河课堂接口参考 - 旧乐学 Moodle",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "社区观察规范。核对日期 2026-11-06；字段非完整官方 schema，例子为合成数据。认证、动态 URL 和未知边界见正文。",
     "license": {
       "name": "MIT",

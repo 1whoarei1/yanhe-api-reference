@@ -2,7 +2,7 @@
 
 采集器使用 [bit-admin / Yanhekt-AutoSlides](https://github.com/bit-admin/Yanhekt-AutoSlides) 的 Apache-2.0 索引器，固定修订为 `84fff4da48c6f466073334613bc1eaeb48383d53`。感谢作者公开实现。我们增加了 Linux 后台监督、明文导出与有界并发；构建产物保留许可证、修改说明、原始文件和逐文件校验值。
 
-这是独立采集的旧站元数据，不读取已停用的旧表，也不解密上游 release。已取回明文快照并接入 Refine 0.9.8 / Replay 0.4.3 的本地测试包；普通包仍通过在线索引查询，尚未发布自建数据服务。
+这是独立采集的旧站元数据，不读取已停用的旧表，也不解密上游 release。明文快照随 Refine / Replay 发布包内置，用户也可手动导入更新文件。
 
 ## 采集与整理
 
